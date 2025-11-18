@@ -257,20 +257,20 @@
                 padding: 0;
                 align-items: stretch;
                 min-height: 100vh;
-                padding-bottom: 100px; /* space for fixed social links */
+                padding-bottom: 40px; /* reduced bottom space */
             }
 
             .phone-mockup {
                 width: 100%;
                 margin: 0;
-                padding: 100px 20px 15px 20px;
+                padding: 120px 20px 5px 20px;  /* slightly less padding so image appears taller in viewport */
                 display: flex;
                 justify-content: center;
             }
 
             .phone-mockup img {
-                width: 75%;
-                max-width: 320px;
+                width: 75%;        /* keep proportions, not too wide */
+                max-width: 380px;  /* allow more absolute height if screen allows */
                 height: auto;
             }
 
@@ -278,17 +278,17 @@
                 width: 100%;
                 gap: 20px;
                 padding: 20px;
-                padding-bottom: 60px;
+                padding-bottom: 20px;  /* reduced extra space at bottom */
                 margin: 0;
-                position: relative;
+                position: static;   /* allow word-logo to position relative to container */
                 flex: 1;
             }
 
             .word-logo {
-                width: clamp(180px, 50vw, 250px);
-                position: fixed;
-                right: 20px;
+                width: clamp(160px, 50vw, 220px);
+                position: absolute;      /* positioned relative to container (top of page) */
                 top: 20px;
+                right: 20px;             /* top-right corner */
                 margin: 0;
                 z-index: 1000;
             }
@@ -331,12 +331,11 @@
             }
 
             .social-links {
-                position: fixed;
-                right: 20px;
-                bottom: 20px;
-                justify-content: flex-end;
+                position: static;              /* sits at bottom of content, not fixed */
+                display: flex;
+                justify-content: flex-end;     /* align to bottom-right within width */
                 gap: 16px;
-                margin: 0;
+                margin: 16px 20px 0 20px;      /* slightly tighter spacing */
                 z-index: 1000;
             }
 
