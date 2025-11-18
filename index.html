@@ -263,15 +263,16 @@
             .phone-mockup {
                 width: 100%;
                 margin: 0;
-                padding: 120px 20px 5px 20px;  /* slightly less padding so image appears taller in viewport */
+                padding: 100px 10px 5px 10px;  /* less side + top padding so phone can appear taller */
                 display: flex;
                 justify-content: center;
             }
 
             .phone-mockup img {
-                width: 75%;        /* keep proportions, not too wide */
-                max-width: 380px;  /* allow more absolute height if screen allows */
-                height: auto;
+                height: 70vh;      /* make the phone visually taller relative to viewport */
+                max-height: 600px; /* safety cap for very tall screens */
+                width: auto;
+                max-width: 90%;    /* prevent overflow on very narrow devices */
             }
 
             .content {
