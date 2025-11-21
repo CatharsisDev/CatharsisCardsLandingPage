@@ -60,7 +60,7 @@
 .content {
     display: flex;
     flex-direction: column;
-    gap: 40px;
+    gap: 20px; /* reduce space between tagline and store buttons */
     justify-self: start;      /* anchor to left within its grid cell */
     width: 100%;
     margin-top: -80px;        /* move content further up */
@@ -91,7 +91,7 @@
         .word-logo {
             width: clamp(180px, 18vw, 240px);
             height: auto;
-            position: fixed;
+            position: fixed; /* ensure stays at top even when scrolling */
             right: 80px;
             top: 50px;
             display: flex;
@@ -246,7 +246,7 @@
             .phone-mockup {
                 width: 100%;
                 margin: 0;
-                padding: 100px 20px 20px 20px;
+                padding: 100px 20px 50px 20px;
                 display: flex;
                 justify-content: center;
             }
@@ -259,7 +259,7 @@
 
             .content {
                 width: 100%;
-                gap: 20px;
+                gap: 0px;
                 padding: 20px;
                 padding-bottom: 20px;
                 margin: 0;
@@ -278,7 +278,7 @@
 
             .tagline {
                 font-size: 32px;
-                margin: 0 auto 20px auto;
+                margin: 0 auto 10px auto;
                 line-height: 1.2;
                 padding-top: 0;
                 text-align: center;
