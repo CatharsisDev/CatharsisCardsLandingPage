@@ -15,7 +15,7 @@
     <meta name="description" content="Catharsis Cards is a mindfulness and self-discovery app offering reflective prompts to support emotional wellbeing, personal growth, and self-reflection." />
     <meta name="robots" content="index,follow,max-image-preview:large" />
     <link rel="canonical" href="https://catharsis.cards/" />
-    <meta name="theme-color" content="#EDE8E1" />
+    <meta name="theme-color" content="#F7F3EA" />
     <meta property="og:title" content="Catharsis Cards – Mindfulness & Self-Discovery App" />
     <meta property="og:description" content="A calm space for reflection and personal growth. Discover prompts for mindfulness, emotional clarity, and self-development with Catharsis Cards." />
     <meta property="og:image" content="https://catharsis.cards/preview.jpg" />
@@ -41,21 +41,266 @@
             font-weight: 800;
             font-style: normal;
         }
+        @font-face {
+            font-family: 'Runtime';
+            src: url('assets/fonts/Runtime.otf') format('opentype');
+            font-weight: 400;
+            font-style: normal;
+        }
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* ---------- Theme variables ---------- */
+        :root {
+            --body-bg: #F7F3EA;
+            --text-color: #1B1B4D;
+            --nav-bg: rgba(250, 247, 240, 0.8);
+            --nav-mobile-bg: rgba(250, 247, 240, 0.97);
+            --nav-border: rgba(0, 0, 0, 0.08);
+            --nav-divider: rgba(0, 0, 0, 0.06);
+            --nav-shadow: rgba(0, 0, 0, 0.08);
+            --logo-filter: none;
+            --badge-bg: linear-gradient(90deg, #AFC0EA 0%, #F0C48A 100%);
+            --badge-text: #1B1B4D;
+            --badge-shadow: rgba(27, 27, 77, 0.15);
+            --badge-shadow-hover: rgba(27, 27, 77, 0.22);
+            --canvas-bg:
+                radial-gradient(ellipse 600px 500px at 78% 8%, rgba(255, 87, 51, 0.06), rgba(255, 87, 51, 0) 60%),
+                radial-gradient(ellipse 700px 500px at 25% 20%, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0) 60%),
+                linear-gradient(180deg, #FAF7F0 0%, #F7F3EA 50%, #F3EFE4 100%);
+        }
+
+        [data-theme="cream"] {
+            --body-bg: #ECE0C4;
+            --text-color: #2C2C2C;
+            --nav-bg: rgba(247, 240, 221, 0.8);
+            --nav-mobile-bg: rgba(247, 240, 221, 0.97);
+            --nav-border: rgba(0, 0, 0, 0.08);
+            --nav-divider: rgba(0, 0, 0, 0.06);
+            --nav-shadow: rgba(0, 0, 0, 0.08);
+            --logo-filter: none;
+            --badge-bg: #1F4D2E;
+            --badge-text: #F3EEE1;
+            --badge-shadow: rgba(0, 0, 0, 0.15);
+            --badge-shadow-hover: rgba(0, 0, 0, 0.22);
+            --canvas-bg:
+                radial-gradient(ellipse 700px 500px at 50% 12%, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0) 60%),
+                linear-gradient(180deg, #F8F3E6 0%, #F3ECDA 32%, #ECE0C4 62%, #E4D3AF 85%, #DFCEA6 100%);
+        }
+
+        [data-theme="indigo"] {
+            --body-bg: #241c60;
+            --text-color: #F3EEE1;
+            --nav-bg: rgba(20, 15, 55, 0.5);
+            --nav-mobile-bg: rgba(20, 15, 55, 0.96);
+            --nav-border: rgba(255, 255, 255, 0.08);
+            --nav-divider: rgba(255, 255, 255, 0.08);
+            --nav-shadow: rgba(0, 0, 0, 0.3);
+            --logo-filter: brightness(0) invert(1);
+            --badge-bg: #8B6FE0;
+            --badge-text: #F8F4FF;
+            --badge-shadow: rgba(139, 111, 224, 0.35);
+            --badge-shadow-hover: rgba(139, 111, 224, 0.45);
+            --canvas-bg:
+                radial-gradient(ellipse 480px 420px at 76% 9%, rgba(196, 150, 240, 0.35), rgba(196, 150, 240, 0) 60%),
+                radial-gradient(ellipse 700px 500px at 30% 15%, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0) 60%),
+                linear-gradient(180deg, #1a1350 0%, #241c60 28%, #2b2372 52%, #2a1f6a 74%, #1d1650 100%);
+        }
+
         body {
-            font-family: 'Raleway', sans-serif;
-            background-color: #EDE8E1;
-            color: #2C2C2C;
+            font-family: 'Runtime', 'Raleway', sans-serif;
+            background-color: var(--body-bg);
+            color: var(--text-color);
+            min-height: 100vh;
+            position: relative;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .bg-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            overflow: hidden;
+            background: var(--canvas-bg);
+            transition: background 0.3s ease;
+        }
+
+        /* ---------- Nav bar ---------- */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 0 60px;
+            background: var(--nav-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 1100;
+        }
+
+        .navbar .word-logo {
+            width: clamp(140px, 13vw, 190px);
+            height: auto;
+            display: block;
+            filter: var(--logo-filter);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .theme-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid var(--nav-border);
+            background: transparent;
+            cursor: pointer;
+            padding: 0;
+            flex-shrink: 0;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .theme-toggle-icon {
+            width: 20px;
+            height: 20px;
+            display: block;
+            filter: var(--logo-filter);
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.06);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 44px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .nav-link {
+            font-size: 17px;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+            color: var(--text-color);
+            text-decoration: none;
+            position: relative;
+            padding: 6px 0;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 2px;
+            background: var(--text-color);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.25s ease;
+        }
+
+        .nav-link:hover::after {
+            transform: scaleX(1);
+        }
+
+        .nav-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            width: 40px;
+            height: 40px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            z-index: 1200;
+        }
+
+        .nav-toggle span {
+            width: 24px;
+            height: 2px;
+            background: var(--text-color);
+            transition: transform 0.25s ease, opacity 0.25s ease;
+        }
+
+        .nav-toggle.is-open span:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+
+        .nav-toggle.is-open span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .nav-toggle.is-open span:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+
+        .nav-mobile-panel {
+            position: fixed;
+            top: 90px;
+            left: 0;
+            right: 0;
+            background: var(--nav-mobile-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-top: 1px solid var(--nav-border);
+            box-shadow: 0 12px 24px var(--nav-shadow);
+            display: none;
+            flex-direction: column;
+            padding: 8px 24px 20px;
+            z-index: 1090;
+        }
+
+        .nav-mobile-panel.is-open {
+            display: flex;
+        }
+
+        .nav-mobile-panel a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 500;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--nav-divider);
+        }
+
+        .nav-mobile-panel a:last-child {
+            border-bottom: none;
+        }
+
+        /* ---------- Hero ---------- */
+        .hero {
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 110px 20px 20px;
         }
 
         .container {
@@ -87,14 +332,13 @@
     gap: 20px; /* reduce space between tagline and store buttons */
     justify-self: start;      /* anchor to left within its grid cell */
     width: 100%;
-    margin-top: -80px;        /* move content further up */
     margin-left: -40px;       /* move content further left */
 }
         .logo {
             letter-spacing: 12px;
             font-size: 28px;
             font-weight: 300;
-            color: #2C2C2C;
+            color: var(--text-color);
             margin-bottom: 20px
         }
 
@@ -102,27 +346,24 @@
   font-size: 56px;
   font-weight: 300;
   line-height: 1.2;
-  color: #2C2C2C;
-  margin-top: 0;              /* no layout shift */
+  color: var(--text-color);
+  margin-top: 0;
   margin-bottom: 20px;
   text-align: center;
   max-width: 18ch;
   margin-left: -60px;
   margin-right: auto;
-  transform: translateY(-40px);   /* move text up visually only */
 }
 
-        .word-logo {
-            width: clamp(180px, 18vw, 240px);
-            height: auto;
-            position: fixed; /* ensure stays at top even when scrolling */
-            right: 80px;
-            top: 50px;
-            display: flex;
-            gap: 12px;
-            margin-bottom: 0;
-            z-index: 1000;
-        }
+.tagline-sub {
+  font-size: 19px;
+  font-weight: 400;
+  color: var(--text-color);
+  opacity: 0.7;
+  text-align: center;
+  max-width: 26ch;
+  margin: -12px auto 28px -60px;
+}
 
         .store-buttons {
             display: flex;
@@ -135,7 +376,7 @@
         .store-button {
             display: inline-flex;
             align-items: center;
-            
+
             gap: 18px;
             padding: 18px 28px;          /* controls height consistently */
             min-width: 320px;            /* fixed width for uniform size */
@@ -196,7 +437,7 @@
             align-items: center;
             justify-content: center;
             text-decoration: none;
-            color: #2C2C2C;
+            color: var(--text-color);
             transition: transform 0.2s;
         }
 
@@ -205,16 +446,394 @@
         }
 
         .social-link svg {
-            width: 60px;
-            height: 60px;
+            width: 45px;
+            height: 45px;
         }
-        .social-link img {
-            width: 60px;
-            height: 60px;
+
+        /* ---------- About section ---------- */
+        .about-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 130px 20px 100px;
+            scroll-margin-top: 90px;
+        }
+
+        .about-container {
+            max-width: 720px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .about-heading {
+            font-size: 44px;
+            font-weight: 300;
+            line-height: 1.2;
+            margin-bottom: 32px;
+        }
+
+        .about-text {
+            font-size: 19px;
+            font-weight: 400;
+            color: var(--text-color);
+            opacity: 0.8;
+            line-height: 1.7;
+            margin-bottom: 24px;
+        }
+
+        .about-text:last-child {
+            margin-bottom: 0;
+        }
+
+        /* ---------- How To section ---------- */
+        .howto-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 130px 20px 100px;
+            scroll-margin-top: 90px;
+        }
+
+        .howto-container {
+            max-width: 1220px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .howto-columns {
+            display: flex;
+            align-items: center;
+            gap: 56px;
+            text-align: left;
+        }
+
+        .howto-columns .howto-list {
+            flex: 1;
+        }
+
+        .howto-image {
+            flex-shrink: 0;
+            width: 460px;
+        }
+
+        .howto-image img {
+            width: 100%;
+            height: auto;
             display: block;
+            border-radius: 24px;
+        }
+
+        .howto-heading {
+            font-size: 44px;
+            font-weight: 300;
+            line-height: 1.2;
+            margin-bottom: 16px;
+        }
+
+        .howto-sub {
+            font-size: 18px;
+            font-weight: 400;
+            color: var(--text-color);
+            opacity: 0.7;
+            max-width: 56ch;
+            margin: 0 auto 56px;
+            line-height: 1.5;
+        }
+
+        .howto-list {
+            display: flex;
+            flex-direction: column;
+            gap: 36px;
+            text-align: left;
+        }
+
+        .howto-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        .howto-icon {
+            width: 56px;
+            height: 56px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            background: var(--badge-bg);
+            color: var(--badge-text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .howto-icon svg {
+            width: 26px;
+            height: 26px;
+        }
+
+        .howto-item-title {
+            font-size: 19px;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-bottom: 6px;
+        }
+
+        .howto-item-desc {
+            font-size: 15px;
+            color: var(--text-color);
+            opacity: 0.7;
+            line-height: 1.5;
+        }
+
+        .howto-note {
+            margin-top: 40px;
+            padding: 18px 24px;
+            border-radius: 16px;
+            border: 1px solid var(--nav-border);
+            font-size: 14px;
+            color: var(--text-color);
+            opacity: 0.7;
+            line-height: 1.5;
+            text-align: left;
+        }
+
+        /* ---------- Catharsis and You section ---------- */
+        .learn-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 130px 20px 100px;
+            scroll-margin-top: 90px;
+        }
+
+        .learn-container {
+            max-width: 1100px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .learn-heading {
+            font-size: 44px;
+            font-weight: 300;
+            line-height: 1.2;
+            margin-bottom: 16px;
+        }
+
+        .learn-sub {
+            font-size: 18px;
+            font-weight: 400;
+            color: var(--text-color);
+            opacity: 0.7;
+            max-width: 56ch;
+            margin: 0 auto 56px;
+            line-height: 1.5;
+        }
+
+        .social-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            align-items: start;
+        }
+
+        .embed-card {
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 20px;
+            box-shadow: 0 2px 14px rgba(0, 0, 0, 0.1);
+            padding: 0;
+            overflow: hidden;
+            position: relative;
+            height: 620px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .embed-card > * {
+            width: 143%;
+            max-width: 143%;
+            flex-shrink: 0;
+            transform: scale(0.7);
+            transform-origin: center center;
+        }
+
+        .embed-card iframe {
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 0 !important;
+            display: block !important;
+        }
+
+        .social-placeholder-card {
+            aspect-ratio: 4 / 5;
+            background: #FFFFFF;
+            border-radius: 20px;
+            border: 1px dashed rgba(0, 0, 0, 0.15);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            color: #2C2C2C;
+            opacity: 0.55;
+        }
+
+        .social-placeholder-card svg {
+            width: 36px;
+            height: 36px;
+        }
+
+        .social-placeholder-card span {
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        /* ---------- Catharsis Guides section ---------- */
+        .guides-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 130px 20px 100px;
+            scroll-margin-top: 90px;
+        }
+
+        .guides-container {
+            max-width: 1100px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .guides-heading {
+            font-size: 44px;
+            font-weight: 300;
+            line-height: 1.2;
+            margin-bottom: 16px;
+        }
+
+        .guides-sub {
+            font-size: 18px;
+            font-weight: 400;
+            color: var(--text-color);
+            opacity: 0.7;
+            max-width: 56ch;
+            margin: 0 auto 56px;
+            line-height: 1.5;
+        }
+
+        .guides-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .guide-card {
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 20px;
+            border: 1px dashed rgba(0, 0, 0, 0.15);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+            padding: 36px 28px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+            text-align: center;
+        }
+
+        .guide-card-icon {
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2C2C2C;
+            opacity: 0.6;
+        }
+
+        .guide-card-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .guide-card-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #2C2C2C;
+        }
+
+        .guide-card-desc {
+            font-size: 14px;
+            color: #2C2C2C;
+            opacity: 0.6;
+            line-height: 1.4;
+        }
+
+        .guide-card-badge {
+            margin-top: 8px;
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 18px;
+            border-radius: 20px;
+            background: #EDE8E1;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            color: #2C2C2C;
+            opacity: 0.55;
+        }
+
+        .guide-card-active {
+            border-style: solid;
+            border-color: rgba(0, 0, 0, 0.08);
+        }
+
+        .guide-card-active .guide-card-icon {
+            opacity: 1;
+        }
+
+        .guide-card-active .guide-card-desc {
+            opacity: 0.75;
+        }
+
+        .guide-card-badge-active {
+            background: var(--badge-bg);
+            color: var(--badge-text);
+            opacity: 1;
+            text-decoration: none;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 10px var(--badge-shadow);
+        }
+
+        .guide-card-badge-active:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px var(--badge-shadow-hover);
+        }
+
+        .guide-card-buy-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .guide-card-buy-row .guide-card-badge {
+            margin-top: 0;
+            padding: 8px 16px;
+            font-size: 12.5px;
         }
 
         @media (max-width: 968px) {
+            .navbar {
+                padding: 0 32px;
+            }
+
             .container {
                 grid-template-columns: 1fr;
                 gap: 60px;
@@ -233,28 +852,69 @@
                 justify-content: center;
             }
 
-            .social-links {
-            }
-
-            .word-logo {
-                width: clamp(150px, 28vw, 230px);
-                right: 24px;
-                top: 24px;
-            }
-
             .phone-mockup img {
                 max-height: 500px;
             }
 
             .phone-mockup { justify-self: center; margin-left: 0; }
-            .content { margin-top: 0; }
+
+            .social-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .learn-heading {
+                font-size: 34px;
+            }
+
+            .guides-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .guides-heading {
+                font-size: 34px;
+            }
+
+            .about-heading {
+                font-size: 34px;
+            }
+
+            .howto-heading {
+                font-size: 34px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .nav-toggle {
+                display: flex;
+            }
         }
 
         @media (max-width: 640px) {
+            .navbar {
+                height: 72px;
+                padding: 0 20px;
+            }
+
+            .navbar .word-logo {
+                width: clamp(120px, 34vw, 170px);
+            }
+
+            .nav-mobile-panel {
+                top: 72px;
+            }
+
             body {
-                padding: 0;
                 position: relative;
                 min-height: 100vh;
+            }
+
+            .hero {
+                padding: 92px 20px 60px;
+                min-height: auto;
             }
 
             .container {
@@ -263,14 +923,12 @@
                 gap: 0;
                 padding: 0;
                 align-items: stretch;
-                min-height: 100vh;
-                padding-bottom: 80px;
             }
 
             .phone-mockup {
                 width: 100%;
                 margin: 0;
-                padding: 100px 20px 50px 20px;
+                padding: 10px 20px 50px 20px;
                 display: flex;
                 justify-content: center;
             }
@@ -289,15 +947,6 @@
                 margin: 0;
                 position: relative;
                 flex: 1;
-            }
-
-            .word-logo {
-                width: clamp(180px, 50vw, 250px);
-                position: fixed;
-                right: 20px;
-                top: 20px;
-                margin: 0;
-                z-index: 1000;
             }
 
             .tagline {
@@ -330,13 +979,13 @@
                 flex-shrink: 0;
             }
 
-            .store-text-small { 
-                font-size: 13px; 
+            .store-text-small {
+                font-size: 13px;
             }
 
-            .store-text-large { 
-                font-size: 20px; 
-                font-weight: 700; 
+            .store-text-large {
+                font-size: 20px;
+                font-weight: 700;
             }
 
             .social-links {
@@ -354,10 +1003,117 @@
                 height: 44px;
             }
 
-            .social-link svg,
-            .social-link img {
-                width: 44px;
-                height: 44px;
+            .social-link svg {
+                width: 33px;
+                height: 33px;
+            }
+
+            .about-section {
+                padding: 60px 20px 80px;
+                min-height: auto;
+            }
+
+            .about-heading {
+                font-size: 28px;
+                margin-bottom: 24px;
+            }
+
+            .about-text {
+                font-size: 16px;
+                margin-bottom: 20px;
+            }
+
+            .howto-section {
+                padding: 60px 20px 80px;
+                min-height: auto;
+            }
+
+            .howto-heading {
+                font-size: 28px;
+            }
+
+            .howto-sub {
+                font-size: 16px;
+                margin-bottom: 32px;
+            }
+
+            .howto-list {
+                gap: 28px;
+            }
+
+            .howto-columns {
+                flex-direction: column;
+                gap: 32px;
+            }
+
+            .howto-image {
+                width: 100%;
+                max-width: 420px;
+            }
+
+            .howto-icon {
+                width: 46px;
+                height: 46px;
+            }
+
+            .howto-icon svg {
+                width: 22px;
+                height: 22px;
+            }
+
+            .howto-item-title {
+                font-size: 17px;
+            }
+
+            .howto-item-desc {
+                font-size: 14px;
+            }
+
+            .learn-section {
+                padding: 60px 20px 80px;
+                min-height: auto;
+            }
+
+            .learn-heading {
+                font-size: 28px;
+            }
+
+            .learn-sub {
+                font-size: 16px;
+                margin-bottom: 32px;
+            }
+
+            .social-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .embed-card {
+                height: 460px;
+                padding: 0;
+            }
+
+            .guides-section {
+                padding: 60px 20px 80px;
+                min-height: auto;
+            }
+
+            .guides-heading {
+                font-size: 28px;
+            }
+
+            .guides-sub {
+                font-size: 16px;
+                margin-bottom: 32px;
+            }
+
+            .guides-grid {
+                grid-template-columns: 1fr;
+                gap: 14px;
+            }
+
+            .guide-card {
+                padding: 28px 20px;
             }
         }
     </style>
@@ -375,67 +1131,317 @@
           "https://www.instagram.com/catharsisposts/",
           "https://x.com/catharsisxyz",
           "https://au.pinterest.com/findyourcatharsis/",
-          "https://apps.apple.com/us/app/catharsis-cards/id6754243648",
-          "https://play.google.com/store/apps/details?id=com.catharsis.cards&hl=en_US"
+          "https://www.youtube.com/@catharsisxyz",
+          "https://apps.apple.com/app/catharsis-cards/id6754243648",
+          "https://play.google.com/store/apps/details?id=com.catharsis.cards"
         ]
       }
     </script>
 </head>
 <body>
-    <div class="container">
-        <div class="phone-mockup">
-            <img src="assets/images/app_screenshot.png" alt="Catharsis Cards App Screenshot">
-        </div>
+    <script>
+        (function () {
+            var THEMES = ['ivory', 'indigo', 'cream'];
+            var stored = localStorage.getItem('catharsis-theme');
+            var initial = THEMES.indexOf(stored) !== -1 ? stored : 'ivory';
+            document.documentElement.setAttribute('data-theme', initial);
+        })();
+    </script>
 
-        <div class="content">
-            <div>
-                <img src="assets/images/catharsis_word_only.png" alt="Catharsis Word Logo" class="word-logo">
-                <h1 class="tagline">A new path to self<br>discovery</h1>
+    <div class="bg-canvas" aria-hidden="true"></div>
+
+    <nav class="navbar">
+        <img src="assets/images/catharsis_word_only.png" alt="Catharsis Word Logo" class="word-logo">
+
+        <div class="nav-right">
+            <div class="nav-links">
+                <a href="#home" class="nav-link">Home</a>
+                <a href="#how-to" class="nav-link">How To</a>
+                <a href="#guides" class="nav-link">Catharsis Guides</a>
+                <a href="#catharsis-you" class="nav-link">Catharsis + You</a>
+                <a href="#about" class="nav-link">About</a>
             </div>
 
-            <div class="store-buttons">
-                <a href="https://apps.apple.com/at/app/catharsis-cards/id6754243648" class="store-button" target="_blank" rel="noopener">
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
-                    </svg>
-                    <div class="store-text">
-                        <span class="store-text-small">Get it on the</span>
-                        <span class="store-text-large">App Store</span>
-                    </div>
-                </a>
+            <div class="nav-actions">
+                <button class="theme-toggle" id="themeToggle" aria-label="Switch color theme" title="Switch color theme">
+                    <img src="assets/images/change_theme_icon.png" alt="" class="theme-toggle-icon">
+                </button>
 
-                <a href="https://play.google.com/store/apps/details?id=com.catharsis.cards&pcampaignid=web_share" class="store-button" target="_blank" rel="noopener">
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.53,12.9 20.18,13.18L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/>
-                    </svg>
-                    <div class="store-text">
-                        <span class="store-text-small">Get it on</span>
-                        <span class="store-text-large">Google Play</span>
-                    </div>
-                </a>
-            </div>
-
-            <div class="social-links">
-                 <a href="https://www.tiktok.com/@findyourcatharsis" class="social-link" target="_blank" rel="noopener" aria-label="TikTok">
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.74h-3.4v13.67a2.9 2.9 0 1 1-2-2.75V9.41a6.34 6.34 0 1 0 5.44 6.27v-6.9a8.2 8.2 0 0 0 4.77 1.52V6.69h-1.04z"/>
-                    </svg>
-                </a>
-                <a href="https://www.instagram.com/catharsisposts/" class="social-link" target="_blank" rel="noopener" aria-label="Instagram">
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M7.8,2H16.2C19.4,2 22,4.6 22,7.8V16.2A5.8,5.8 0 0,1 16.2,22H7.8C4.6,22 2,19.4 2,16.2V7.8A5.8,5.8 0 0,1 7.8,2M7.6,4A3.6,3.6 0 0,0 4,7.6V16.4C4,18.39 5.61,20 7.6,20H16.4A3.6,3.6 0 0,0 20,16.4V7.6C20,5.61 18.39,4 16.4,4H7.6M17.25,5.5A1.25,1.25 0 0,1 18.5,6.75A1.25,1.25 0 0,1 17.25,8A1.25,1.25 0 0,1 16,6.75A1.25,1.25 0 0,1 17.25,5.5M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z"/>
-                    </svg>
-                </a>
-                <a href="https://x.com/catharsisxyz" class="social-link" target="_blank" rel="noopener" aria-label="X (Twitter)">
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                    </svg>
-                </a>
-                <a href="https://au.pinterest.com/findyourcatharsis/" class="social-link" target="_blank" rel="noopener" aria-label="Pinterest">
-                    <img src="assets/images/pinterest_logo.png" alt="Pinterest logo">
-                </a>
+                <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu" aria-expanded="false">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
             </div>
         </div>
+    </nav>
+
+    <div class="nav-mobile-panel" id="navMobilePanel">
+        <a href="#home">Home</a>
+        <a href="#how-to">How To</a>
+        <a href="#guides">Catharsis Guides</a>
+        <a href="#catharsis-you">Catharsis + You</a>
+        <a href="#about">About</a>
     </div>
+
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="phone-mockup">
+                <img src="assets/images/app_screenshot.png" alt="Catharsis Cards App Screenshot">
+            </div>
+
+            <div class="content">
+                <div>
+                    <h1 class="tagline">A new path to self<br>discovery</h1>
+                    <p class="tagline-sub">Your destination for self actualization</p>
+                </div>
+
+                <div class="store-buttons">
+                    <a href="https://apps.apple.com/app/catharsis-cards/id6754243648" class="store-button" target="_blank" rel="noopener">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
+                        </svg>
+                        <div class="store-text">
+                            <span class="store-text-small">Get it on the</span>
+                            <span class="store-text-large">App Store</span>
+                        </div>
+                    </a>
+
+                    <a href="https://play.google.com/store/apps/details?id=com.catharsis.cards&pcampaignid=web_share" class="store-button" target="_blank" rel="noopener">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.53,12.9 20.18,13.18L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/>
+                        </svg>
+                        <div class="store-text">
+                            <span class="store-text-small">Get it on</span>
+                            <span class="store-text-large">Google Play</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="howto-section" id="how-to">
+        <div class="howto-container">
+            <h2 class="howto-heading">How It Works</h2>
+            <p class="howto-sub">A quick look at how to move through your deck, on your own or with someone else.</p>
+
+            <div class="howto-columns">
+            <div class="howto-list">
+                <div class="howto-item">
+                    <div class="howto-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M8 5 2 12l6 7"/>
+                            <path d="M16 5l6 7-6 7"/>
+                        </svg>
+                    </div>
+                    <div class="howto-item-text">
+                        <div class="howto-item-title">Swipe Through Cards</div>
+                        <div class="howto-item-desc">Swipe left or right to explore questions. Left swipes show you less of that category.</div>
+                    </div>
+                </div>
+
+                <div class="howto-item">
+                    <div class="howto-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M12 20.35 10.55 19C5.4 14.36 2 11.28 2 7.5 2 4.42 4.42 2 7.5 2c1.74 0 3.41.81 4.5 2.09C13.09 2.81 14.76 2 16.5 2 19.58 2 22 4.42 22 7.5c0 3.78-3.4 6.86-8.55 11.54Z"/>
+                        </svg>
+                    </div>
+                    <div class="howto-item-text">
+                        <div class="howto-item-title">Double Tap to Like</div>
+                        <div class="howto-item-desc">Save favourite questions and add a personal reflection to any liked card to revisit later.</div>
+                    </div>
+                </div>
+
+                <div class="howto-item">
+                    <div class="howto-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/>
+                            <rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/>
+                            <rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/>
+                            <rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5"/>
+                        </svg>
+                    </div>
+                    <div class="howto-item-text">
+                        <div class="howto-item-title">Choose Categories</div>
+                        <div class="howto-item-desc">Filter questions by topics that resonate with you.</div>
+                    </div>
+                </div>
+
+                <div class="howto-item">
+                    <div class="howto-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <circle cx="9.88" cy="9.88" r="6"/>
+                            <circle cx="14.12" cy="14.12" r="6"/>
+                        </svg>
+                    </div>
+                    <div class="howto-item-text">
+                        <div class="howto-item-title">Reflect Together with Circle</div>
+                        <div class="howto-item-desc">Invite someone into Circle mode: answer the same prompt independently, then reveal your answers together.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="howto-image">
+                <img src="assets/images/Catharsis_promo_image.jpeg" alt="Catharsis Cards app in use">
+            </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="guides-section" id="guides">
+        <div class="guides-container">
+            <h2 class="guides-heading">Catharsis Guides</h2>
+            <p class="guides-sub">Downloadable guides to support your self-discovery practice — worksheets, prompts, and reflection exercises. New guides coming soon.</p>
+
+            <div class="guides-grid">
+                <div class="guide-card guide-card-active">
+                    <div class="guide-card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <path d="M14 2v6h6"/>
+                        </svg>
+                    </div>
+                    <div class="guide-card-title">Overthinking Reset Workbook</div>
+                    <div class="guide-card-desc">A 26-page workbook to help calm racing thoughts and reset your headspace. Includes a bonus code for 3 month access to the Catharsis Cards app premium subscription.</div>
+                    <div class="guide-card-buy-row">
+                        <a href="https://buy.stripe.com/9B6dRa4R15n76GwgW053O04" target="_blank" rel="noopener" class="guide-card-badge guide-card-badge-active" onclick="gtag('event', 'pdf_purchase_click', {'guide_name': 'overthinking-reset-workbook', 'platform': 'ios'});">Buy for iOS &ndash; &euro;3.99</a>
+                        <a href="https://buy.stripe.com/4gM14ogzJ4j31mc7lq53O01" target="_blank" rel="noopener" class="guide-card-badge guide-card-badge-active" onclick="gtag('event', 'pdf_purchase_click', {'guide_name': 'overthinking-reset-workbook', 'platform': 'android'});">Buy for Android &ndash; &euro;3.99</a>
+                    </div>
+                </div>
+                <div class="guide-card guide-card-active">
+                    <div class="guide-card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <path d="M14 2v6h6"/>
+                        </svg>
+                    </div>
+                    <div class="guide-card-title">The Boundaries Reset</div>
+                    <div class="guide-card-desc">A 17-page guide for protecting your peace, saying the clean sentence, and staying with yourself afterward. Includes a bonus code for 3 month access to the Catharsis Cards app premium subscription.</div>
+                    <div class="guide-card-buy-row">
+                        <a href="https://buy.stripe.com/dRm5kEgzJ9Dnfd2fRW53O02" target="_blank" rel="noopener" class="guide-card-badge guide-card-badge-active" onclick="gtag('event', 'pdf_purchase_click', {'guide_name': 'boundaries-reset-workbook', 'platform': 'ios'});">Buy for iOS &ndash; &euro;3.99</a>
+                        <a href="https://buy.stripe.com/00waEYfvF2aVc0Q5di53O03" target="_blank" rel="noopener" class="guide-card-badge guide-card-badge-active" onclick="gtag('event', 'pdf_purchase_click', {'guide_name': 'boundaries-reset-workbook', 'platform': 'android'});">Buy for Android &ndash; &euro;3.99</a>
+                    </div>
+                </div>
+                <div class="guide-card guide-card-active">
+                    <div class="guide-card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <path d="M14 2v6h6"/>
+                        </svg>
+                    </div>
+                    <div class="guide-card-title">Emotional Burnout Reset</div>
+                    <div class="guide-card-desc">An 18-page guide for noticing depletion, reducing emotional load, and coming back to yourself gently. Includes a bonus code for 3 month access to the Catharsis Cards app premium subscription.</div>
+                    <div class="guide-card-buy-row">
+                        <a href="https://buy.stripe.com/fZu28s0AL16R2qgcFK53O00" target="_blank" rel="noopener" class="guide-card-badge guide-card-badge-active" onclick="gtag('event', 'pdf_purchase_click', {'guide_name': 'emotional-burnout-reset-workbook', 'platform': 'ios'});">Buy for iOS &ndash; &euro;3.99</a>
+                        <a href="https://buy.stripe.com/dRmaEY6Z94j3aWMaxC53O05" target="_blank" rel="noopener" class="guide-card-badge guide-card-badge-active" onclick="gtag('event', 'pdf_purchase_click', {'guide_name': 'emotional-burnout-reset-workbook', 'platform': 'android'});">Buy for Android &ndash; &euro;3.99</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="learn-section" id="catharsis-you">
+        <div class="learn-container">
+            <h2 class="learn-heading">Catharsis and You</h2>
+            <p class="learn-sub">A look at reflections and moments from our community. Follow along on social for prompts, stories, and self-discovery content - new posts coming soon.</p>
+
+            <div class="social-grid">
+                <div class="embed-card embed-card--pinterest">
+                    <a data-pin-do="embedPin" data-pin-width="medium" href="https://au.pinterest.com/pin/1097963584196994099/"></a>
+                </div>
+
+                <div class="embed-card embed-card--tiktok">
+                    <blockquote class="tiktok-embed" cite="https://www.tiktok.com/@findyourcatharsis/photo/7645529598847110403" data-video-id="7645529598847110403" style="max-width: 605px; min-width: 325px;">
+                        <section><a target="_blank" rel="noopener" href="https://www.tiktok.com/@findyourcatharsis">@findyourcatharsis</a></section>
+                    </blockquote>
+                </div>
+
+                <div class="embed-card embed-card--x">
+                    <blockquote class="twitter-tweet">
+                        <a href="https://x.com/catharsisxyz/status/2058578960313684115"></a>
+                    </blockquote>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="about-section" id="about">
+        <div class="about-container">
+            <h2 class="about-heading">About Catharsis</h2>
+            <p class="about-text">The world can be a confusing, cruel, and irrational place — and growing up in it today looks different than it did for the generations before. Catharsis is our small contribution to a much bigger issue: a beautifully simple, seemingly non-chalant card game built to get people, young and old, caring about their own and each other's mental health.</p>
+            <p class="about-text">Questions are the real answers. Thinking is really just a constant asking and answering of questions, and the questions we habitually ask ourselves shape how we feel and how we live. Kids ask endless questions about everything; most of us lose that habit somewhere along the way. Catharsis is here to bring it back.</p>
+            <p class="about-text">Catharsis | k&#601;&#712;&#952;&#593;&#720;s&#618;s — the release of strong or repressed emotion. The word goes back to Aristotle, who believed that cleansing the emotions was the purpose of a good story. We borrowed it because that's exactly what we're after: releasing what's been sitting with you, one honest card at a time.</p>
+        </div>
+    </section>
+
+    <div class="social-links">
+         <a href="https://www.tiktok.com/@findyourcatharsis" class="social-link" target="_blank" rel="noopener" aria-label="TikTok">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.74h-3.4v13.67a2.9 2.9 0 1 1-2-2.75V9.41a6.34 6.34 0 1 0 5.44 6.27v-6.9a8.2 8.2 0 0 0 4.77 1.52V6.69h-1.04z"/>
+            </svg>
+        </a>
+        <a href="https://www.instagram.com/catharsisposts/" class="social-link" target="_blank" rel="noopener" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M7.8,2H16.2C19.4,2 22,4.6 22,7.8V16.2A5.8,5.8 0 0,1 16.2,22H7.8C4.6,22 2,19.4 2,16.2V7.8A5.8,5.8 0 0,1 7.8,2M7.6,4A3.6,3.6 0 0,0 4,7.6V16.4C4,18.39 5.61,20 7.6,20H16.4A3.6,3.6 0 0,0 20,16.4V7.6C20,5.61 18.39,4 16.4,4H7.6M17.25,5.5A1.25,1.25 0 0,1 18.5,6.75A1.25,1.25 0 0,1 17.25,8A1.25,1.25 0 0,1 16,6.75A1.25,1.25 0 0,1 17.25,5.5M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z"/>
+            </svg>
+        </a>
+        <a href="https://x.com/catharsisxyz" class="social-link" target="_blank" rel="noopener" aria-label="X (Twitter)">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+            </svg>
+        </a>
+        <a href="https://au.pinterest.com/findyourcatharsis/" class="social-link" target="_blank" rel="noopener" aria-label="Pinterest">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12.017 0C5.396 0 0 5.396 0 12.017c0 5.109 3.164 9.505 7.627 11.303-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.171-2.911 1.023 0 1.517.769 1.517 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.098.12.112.225.083.345l-.333 1.36c-.053.222-.174.269-.402.164-1.499-.699-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.631-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146 1.123.345 2.312.53 3.55.53 6.624 0 11.99-5.396 11.99-12.017C24.017 5.396 18.617 0 12.017 0z"/>
+            </svg>
+        </a>
+        <a href="https://www.youtube.com/@catharsisxyz" class="social-link" target="_blank" rel="noopener" aria-label="YouTube">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M10,15L15.19,12L10,9V15M21.56,7.17C21.69,7.64 21.78,8.27 21.84,9.07C21.91,9.87 21.94,10.56 21.94,11.16L22,12C22,14.19 21.84,15.8 21.56,16.83C21.31,17.73 20.73,18.31 19.83,18.56C19.36,18.69 18.5,18.78 17.18,18.84C15.88,18.91 14.69,18.94 13.59,18.94L12,19C7.81,19 5.2,18.84 4.17,18.56C3.27,18.31 2.69,17.73 2.44,16.83C2.31,16.36 2.22,15.73 2.16,14.93C2.09,14.13 2.06,13.44 2.06,12.84L2,12C2,9.81 2.16,8.2 2.44,7.17C2.69,6.27 3.27,5.69 4.17,5.44C4.64,5.31 5.5,5.22 6.82,5.16C8.12,5.09 9.31,5.06 10.41,5.06L12,5C16.19,5 18.8,5.16 19.83,5.44C20.73,5.69 21.31,6.27 21.56,7.17Z"/>
+            </svg>
+        </a>
+    </div>
+
+    <script>
+        (function () {
+            var toggle = document.getElementById('navToggle');
+            var panel = document.getElementById('navMobilePanel');
+
+            function closeMenu() {
+                toggle.classList.remove('is-open');
+                panel.classList.remove('is-open');
+                toggle.setAttribute('aria-expanded', 'false');
+            }
+
+            toggle.addEventListener('click', function () {
+                var isOpen = toggle.classList.toggle('is-open');
+                panel.classList.toggle('is-open', isOpen);
+                toggle.setAttribute('aria-expanded', String(isOpen));
+            });
+
+            panel.querySelectorAll('a').forEach(function (link) {
+                link.addEventListener('click', closeMenu);
+            });
+        })();
+
+        (function () {
+            var THEMES = ['ivory', 'indigo', 'cream'];
+            var root = document.documentElement;
+            var themeToggle = document.getElementById('themeToggle');
+
+            themeToggle.addEventListener('click', function () {
+                var current = root.getAttribute('data-theme') || 'ivory';
+                var next = THEMES[(THEMES.indexOf(current) + 1) % THEMES.length];
+                root.setAttribute('data-theme', next);
+                localStorage.setItem('catharsis-theme', next);
+            });
+        })();
+    </script>
+
+    <!-- Official embed widgets for the Catharsis and You section -->
+    <script async defer src="https://assets.pinterest.com/js/pinit.js"></script>
+    <script async src="https://www.tiktok.com/embed.js"></script>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 </body>
 </html>
