@@ -15,7 +15,7 @@
     <meta name="description" content="Catharsis Cards is a mindfulness and self-discovery app offering reflective prompts to support emotional wellbeing, personal growth, and self-reflection." />
     <meta name="robots" content="index,follow,max-image-preview:large" />
     <link rel="canonical" href="https://catharsis.cards/" />
-    <meta name="theme-color" content="#F7F3EA" />
+    <meta name="theme-color" content="#F7F3EA" id="metaThemeColor" />
     <meta property="og:title" content="Catharsis Cards – Mindfulness & Self-Discovery App" />
     <meta property="og:description" content="A calm space for reflection and personal growth. Discover prompts for mindfulness, emotional clarity, and self-development with Catharsis Cards." />
     <meta property="og:image" content="https://catharsis.cards/preview.jpg" />
@@ -34,18 +34,21 @@
             src: url('assets/fonts/Raleway-Regular.ttf') format('truetype');
             font-weight: 700;
             font-style: normal;
+            font-display: swap;
         }
         @font-face {
             font-family: 'Raleway';
             src: url('assets/fonts/Raleway-Bold.ttf') format('truetype');
             font-weight: 800;
             font-style: normal;
+            font-display: swap;
         }
         @font-face {
             font-family: 'Runtime';
             src: url('assets/fonts/Runtime.otf') format('opentype');
             font-weight: 400;
             font-style: normal;
+            font-display: swap;
         }
         * {
             margin: 0;
@@ -320,10 +323,39 @@
             margin-left: 50px; /* nudge further left */
         }
 
-        .phone-mockup img {
+        .phone-mockup-frame {
+            position: relative;
+            display: inline-block;
+            line-height: 0;
+        }
+
+        .phone-mockup-base {
             max-width: 100%;
             height: auto;
             max-height: 700px;
+            display: block;
+        }
+
+        /* The ship graphic is baked into the screenshot, so
+           app_screenshot_base.png has it painted out (blurred away) and
+           app_screenshot_ship.png is that same ship+waves artwork cut out
+           separately, positioned back on top at the same spot (as
+           percentages of the base image, so it stays aligned at any
+           rendered size) and given a small bob so just the ship moves,
+           not the whole phone/screenshot. */
+        .phone-mockup-ship {
+            position: absolute;
+            left: 15.93%;
+            top: 18.14%;
+            width: 67.55%;
+            height: auto;
+            pointer-events: none;
+            animation: shipBob 2.6s ease-in-out infinite;
+        }
+
+        @keyframes shipBob {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-7px); }
         }
 
 .content {
@@ -356,13 +388,28 @@
 }
 
 .tagline-sub {
-  font-size: 19px;
+  /* Earlier attempts tried to calculate the true page/viewport center and
+     shift onto it (vw tricks, then a calculated translateX) — fragile,
+     and it also drifted away from what "aligned with the headline" above
+     it actually means once .container isn't at its exact max-width.
+     Simplest robust fix: don't compute anything — just give this the
+     IDENTICAL box model as .tagline right above it (same max-width, same
+     margin-left/-right). Both elements then wrap to the same box width and
+     sit at the same left edge, so their centered text lines up with each
+     other automatically, at any viewport size, with no magic numbers.
+     Catch: "ch" is relative to THIS element's own font-size. tagline is
+     56px and tagline-sub is 24px, so "18ch" here was actually a much
+     narrower box than tagline's 18ch — same unit, very different pixels —
+     which is why they still didn't line up. Scaling by the font-size
+     ratio (56/24 ≈ 2.33) gives the matching pixel width instead:
+     18ch * 2.33 ≈ 42ch. */
+  max-width: 42ch;
+  margin: -8px auto 28px -60px;
+  font-size: 24px;
   font-weight: 400;
   color: var(--text-color);
   opacity: 0.7;
   text-align: center;
-  max-width: 26ch;
-  margin: -12px auto 28px -60px;
 }
 
         .store-buttons {
@@ -480,6 +527,14 @@
             opacity: 0.8;
             line-height: 1.7;
             margin-bottom: 24px;
+        }
+
+        .ipa {
+            /* Our display font (Runtime) doesn't include IPA phonetic glyphs,
+               so this falls back character-by-character and looks mismatched.
+               Force a font stack with full Unicode/IPA coverage instead. */
+            font-family: 'Charis SIL', 'Doulos SIL', 'Times New Roman', Georgia, serif;
+            font-style: italic;
         }
 
         .about-text:last-child {
@@ -652,6 +707,23 @@
             justify-content: center;
         }
 
+        /* Each platform's own embed renders its content with a slightly
+           different native corner radius internally, which we can't reach
+           through the iframe — so we vary the outer clip radius per
+           platform to try to visually match them instead of using one
+           shared value. */
+        .embed-card--pinterest {
+            border-radius: 20px;
+        }
+
+        .embed-card--instagram {
+            border-radius: 22px;
+        }
+
+        .embed-card--x {
+            border-radius: 14px;
+        }
+
         .embed-card > * {
             width: 143%;
             max-width: 143%;
@@ -665,6 +737,32 @@
             max-width: 100% !important;
             min-width: 0 !important;
             display: block !important;
+        }
+
+        /* Previous attempt: oversizing + scaling the iframe to push its
+           chrome past our rounded overflow:hidden clip, the same trick
+           used for the other platforms. That backfired two ways: (1) 140%
+           size * scale(0.72) is arithmetically ~101% — almost no actual
+           crop, which is why Instagram's full header/footer chrome still
+           showed uncropped; (2) forcing width/height on Twitter's iframe
+           fought with its own JS-driven auto-resize, breaking its layout
+           into a tiny floating card.
+           Simpler, more reliable fix: round the iframe's own box directly.
+           border-radius + overflow:hidden work on an iframe element itself
+           in all current browsers, independent of the parent's clipping —
+           so this rounds the actual corners Instagram/X render, without
+           touching their size or fighting their own resize scripts. It
+           won't crop Instagram's header/footer chrome (that content is
+           inside a cross-origin iframe we can't reach), but it fixes the
+           actual complaint: sharp corners instead of rounded ones. */
+        .embed-card--instagram iframe {
+            border-radius: 22px;
+            overflow: hidden;
+        }
+
+        .embed-card--x iframe {
+            border-radius: 14px;
+            overflow: hidden;
         }
 
         .social-placeholder-card {
@@ -691,6 +789,136 @@
             font-size: 14px;
             font-weight: 500;
             letter-spacing: 0.3px;
+        }
+
+        /* ---------- Circle section ---------- */
+        .circle-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 130px 20px 100px;
+            scroll-margin-top: 90px;
+        }
+
+        .circle-container {
+            max-width: 1000px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .circle-heading-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            margin-bottom: 16px;
+        }
+
+        .circle-heading-icon {
+            width: 34px;
+            height: 34px;
+            color: var(--text-color);
+        }
+
+        .circle-heading {
+            font-size: 44px;
+            font-weight: 300;
+            line-height: 1.2;
+        }
+
+        .circle-sub {
+            font-size: 18px;
+            font-weight: 400;
+            color: var(--text-color);
+            opacity: 0.7;
+            max-width: 56ch;
+            margin: 0 auto 56px;
+            line-height: 1.5;
+            /* .circle-heading-row centers the icon+"Circle" as one flex
+               group, so the "Circle" text itself actually sits right of
+               true center by half the icon+gap width (34px icon + 14px
+               gap = 48px, so +24px). This centers independently on true
+               center via margin:auto, so it needs the same +24px nudge to
+               land under the word "Circle" instead of under the icon. */
+            transform: translateX(24px);
+        }
+
+        .circle-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            text-align: left;
+            margin-bottom: 8px;
+        }
+
+        .circle-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        .circle-step-icon {
+            width: 48px;
+            height: 48px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            background: var(--badge-bg);
+            color: var(--badge-text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .circle-step-icon svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .circle-step-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-bottom: 6px;
+        }
+
+        .circle-step-desc {
+            font-size: 15px;
+            color: var(--text-color);
+            opacity: 0.7;
+            line-height: 1.5;
+        }
+
+        .circle-note {
+            margin-bottom: 56px;
+        }
+
+        .circle-mockups {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+
+        .circle-mockup {
+            width: 260px;
+        }
+
+        .circle-mockup img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18);
+            margin-bottom: 14px;
+        }
+
+        .circle-mockup-caption {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-color);
+            opacity: 0.75;
         }
 
         /* ---------- Catharsis Guides section ---------- */
@@ -758,6 +986,22 @@
         .guide-card-icon svg {
             width: 100%;
             height: 100%;
+        }
+
+        .guide-card-cover {
+            width: 160px;
+            max-width: 60%;
+            aspect-ratio: 700 / 990;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+        }
+
+        .guide-card-cover img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
         }
 
         .guide-card-title {
@@ -844,15 +1088,38 @@
                 font-size: 24px;
             }
 
+            /* .content's -40px and .tagline's -60px margins exist to
+               compensate for sitting in the left column of the desktop
+               two-column grid — at this breakpoint .container is already
+               a single centered column, so those offsets just push
+               everything (headline, and until it's overridden below,
+               anything relying on centering within .content) left of true
+               center. Zero them out here, same as the 640px block further
+               down already does. */
+            .content {
+                margin-left: 0;
+            }
+
             .tagline {
                 font-size: 40px;
+                margin-left: 0;
+                margin-right: 0;
+            }
+
+            .tagline-sub {
+                /* .container stacks to a single column at this breakpoint,
+                   so the desktop-only -330px correction (for the two-column
+                   grid's asymmetric layout) no longer applies. */
+                transform: none;
+                margin: -8px auto 24px;
+                max-width: 90%;
             }
 
             .store-buttons {
                 justify-content: center;
             }
 
-            .phone-mockup img {
+            .phone-mockup-base {
                 max-height: 500px;
             }
 
@@ -880,6 +1147,23 @@
 
             .howto-heading {
                 font-size: 34px;
+            }
+
+            /* .howto-columns is a nowrap flex row with the image pinned to
+               a fixed 460px (flex-shrink:0) — fine on desktop, but with no
+               breakpoint between this one and 640px, every tablet-portrait
+               width (768/810/820/834px etc.) was squeezing .howto-list into
+               a ~150-300px sliver next to that fixed image. Stack it here,
+               same as the mobile treatment further down, so tablets get a
+               readable column instead of a crushed one. */
+            .howto-columns {
+                flex-direction: column;
+                gap: 40px;
+            }
+
+            .howto-image {
+                width: 100%;
+                max-width: 420px;
             }
         }
 
@@ -933,8 +1217,16 @@
                 justify-content: center;
             }
 
-            .phone-mockup img {
-                width: 65%;
+            .phone-mockup-base {
+                /* vw instead of a %-of-parent width: .phone-mockup-frame is
+                   an inline-block that shrink-wraps to this image, so a %
+                   width here would have no definite basis to resolve
+                   against. vw sizes off the viewport instead (no
+                   dependency on the parent), and .phone-mockup-frame then
+                   shrink-wraps to match — keeping it the same box as the
+                   image, which .phone-mockup-ship's %-based position
+                   depends on. */
+                width: 65vw;
                 max-width: 280px;
                 height: auto;
             }
@@ -956,6 +1248,18 @@
                 padding-top: 0;
                 text-align: center;
                 max-width: 100%;
+            }
+
+            .tagline-sub {
+                /* Desktop applies a -330px transform to correct for the
+                   asymmetric grid column, but on mobile .container stacks
+                   into a single full-width column, so that correction
+                   doesn't apply here — cancel it or the subheadline would
+                   shift off-screen to the left. */
+                transform: none;
+                margin: -4px auto 16px;
+                max-width: 100%;
+                font-size: 17px;
             }
 
             .store-buttons {
@@ -1051,6 +1355,29 @@
                 max-width: 420px;
             }
 
+            .circle-section {
+                padding: 60px 20px 80px;
+                min-height: auto;
+            }
+
+            .circle-heading {
+                font-size: 28px;
+            }
+
+            .circle-sub {
+                font-size: 16px;
+                margin-bottom: 32px;
+            }
+
+            .circle-steps {
+                gap: 24px;
+            }
+
+            .circle-mockup {
+                width: 100%;
+                max-width: 260px;
+            }
+
             .howto-icon {
                 width: 46px;
                 height: 46px;
@@ -1142,9 +1469,18 @@
     <script>
         (function () {
             var THEMES = ['ivory', 'indigo', 'cream'];
+            // Keep in sync with the --body-bg value of each [data-theme]
+            // block further up — this is what actually tints Safari's own
+            // compact address bar (the "catharsis.cards" pill), via the
+            // theme-color meta tag. It was previously hardcoded to the
+            // ivory color, so switching to indigo/cream left that browser
+            // chrome showing a mismatched color.
+            var THEME_COLORS = { ivory: '#F7F3EA', indigo: '#241c60', cream: '#ECE0C4' };
             var stored = localStorage.getItem('catharsis-theme');
             var initial = THEMES.indexOf(stored) !== -1 ? stored : 'ivory';
             document.documentElement.setAttribute('data-theme', initial);
+            var metaThemeColor = document.getElementById('metaThemeColor');
+            if (metaThemeColor) metaThemeColor.setAttribute('content', THEME_COLORS[initial]);
         })();
     </script>
 
@@ -1157,6 +1493,7 @@
             <div class="nav-links">
                 <a href="#home" class="nav-link">Home</a>
                 <a href="#how-to" class="nav-link">How To</a>
+                <a href="#circle" class="nav-link">Circle</a>
                 <a href="#guides" class="nav-link">Catharsis Guides</a>
                 <a href="#catharsis-you" class="nav-link">Catharsis + You</a>
                 <a href="#about" class="nav-link">About</a>
@@ -1179,6 +1516,7 @@
     <div class="nav-mobile-panel" id="navMobilePanel">
         <a href="#home">Home</a>
         <a href="#how-to">How To</a>
+        <a href="#circle">Circle</a>
         <a href="#guides">Catharsis Guides</a>
         <a href="#catharsis-you">Catharsis + You</a>
         <a href="#about">About</a>
@@ -1187,7 +1525,10 @@
     <section class="hero" id="home">
         <div class="container">
             <div class="phone-mockup">
-                <img src="assets/images/app_screenshot.png" alt="Catharsis Cards App Screenshot">
+                <div class="phone-mockup-frame">
+                    <img src="assets/images/app_screenshot_base.png" alt="Catharsis Cards App Screenshot" class="phone-mockup-base">
+                    <img src="assets/images/app_screenshot_ship.png" alt="" class="phone-mockup-ship" aria-hidden="true">
+                </div>
             </div>
 
             <div class="content">
@@ -1289,6 +1630,91 @@
         </div>
     </section>
 
+    <section class="circle-section" id="circle">
+        <div class="circle-container">
+            <div class="circle-heading-row">
+                <svg class="circle-heading-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <circle cx="9.88" cy="9.88" r="6"/>
+                    <circle cx="14.12" cy="14.12" r="6"/>
+                </svg>
+                <h2 class="circle-heading">Circle</h2>
+            </div>
+            <p class="circle-sub">A shared reflection experience</p>
+
+            <div class="circle-steps">
+                <div class="circle-step">
+                    <div class="circle-step-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M12 20h9"/>
+                            <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>
+                        </svg>
+                    </div>
+                    <div class="circle-step-text">
+                        <div class="circle-step-title">Answer Independently</div>
+                        <div class="circle-step-desc">Each player reads the same question and writes their own honest answer — no peeking!</div>
+                    </div>
+                </div>
+
+                <div class="circle-step">
+                    <div class="circle-step-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                    </div>
+                    <div class="circle-step-text">
+                        <div class="circle-step-title">Reveal Together</div>
+                        <div class="circle-step-desc">Once both players submit, your answers are revealed at the same time so you can read each other's perspective.</div>
+                    </div>
+                </div>
+
+                <div class="circle-step">
+                    <div class="circle-step-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M17 3 21 7l-4 4"/>
+                            <path d="M21 7H9"/>
+                            <path d="M7 21 3 17l4-4"/>
+                            <path d="M3 17h12"/>
+                        </svg>
+                    </div>
+                    <div class="circle-step-text">
+                        <div class="circle-step-title">Choose: Match or Differ</div>
+                        <div class="circle-step-desc">Did you feel a deep connection on this one, or do you see things differently? Pick your verdict.</div>
+                    </div>
+                </div>
+
+                <div class="circle-step">
+                    <div class="circle-step-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M18.4 5.6l-2.8 2.8M8.4 15.6l-2.8 2.8"/>
+                        </svg>
+                    </div>
+                    <div class="circle-step-text">
+                        <div class="circle-step-title">See Your Circle Recap</div>
+                        <div class="circle-step-desc">After all questions, get a beautiful summary showing where you connected and where you diverged.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="howto-note circle-note">Each player has 3 skips per session. Skipping a card skips it for both of you.</div>
+
+            <div class="circle-mockups">
+                <div class="circle-mockup">
+                    <img src="assets/images/circle-setup.png" alt="Starting a Circle session in the Catharsis Cards app">
+                    <div class="circle-mockup-caption">Start a session together</div>
+                </div>
+                <div class="circle-mockup">
+                    <img src="assets/images/circle-gameplay.png" alt="Answering a Circle prompt in the Catharsis Cards app">
+                    <div class="circle-mockup-caption">Answer independently</div>
+                </div>
+                <div class="circle-mockup">
+                    <img src="assets/images/circle-recap.png" alt="Circle session recap in the Catharsis Cards app">
+                    <div class="circle-mockup-caption">Reveal your Circle Recap</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section class="guides-section" id="guides">
         <div class="guides-container">
             <h2 class="guides-heading">Catharsis Guides</h2>
@@ -1296,42 +1722,33 @@
 
             <div class="guides-grid">
                 <div class="guide-card guide-card-active">
-                    <div class="guide-card-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                            <path d="M14 2v6h6"/>
-                        </svg>
+                    <div class="guide-card-cover">
+                        <img src="assets/images/guide-cover-overthinking.png" alt="The Overthinking Reset guide cover" loading="lazy">
                     </div>
-                    <div class="guide-card-title">Overthinking Reset Workbook</div>
-                    <div class="guide-card-desc">A 26-page workbook to help calm racing thoughts and reset your headspace. Includes a bonus code for 3 month access to the Catharsis Cards app premium subscription.</div>
+                    <div class="guide-card-title">The Overthinking Reset</div>
+                    <div class="guide-card-desc">A 38-page, 14-day workshop for leaving the mental loop and returning to your body, your values, and one clear next step. Includes a bonus code for 3 month access to the Catharsis Cards app premium subscription.</div>
                     <div class="guide-card-buy-row">
                         <a href="https://buy.stripe.com/9B6dRa4R15n76GwgW053O04" target="_blank" rel="noopener" class="guide-card-badge guide-card-badge-active" onclick="gtag('event', 'pdf_purchase_click', {'guide_name': 'overthinking-reset-workbook', 'platform': 'ios'});">Buy for iOS &ndash; &euro;3.99</a>
                         <a href="https://buy.stripe.com/4gM14ogzJ4j31mc7lq53O01" target="_blank" rel="noopener" class="guide-card-badge guide-card-badge-active" onclick="gtag('event', 'pdf_purchase_click', {'guide_name': 'overthinking-reset-workbook', 'platform': 'android'});">Buy for Android &ndash; &euro;3.99</a>
                     </div>
                 </div>
                 <div class="guide-card guide-card-active">
-                    <div class="guide-card-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                            <path d="M14 2v6h6"/>
-                        </svg>
+                    <div class="guide-card-cover">
+                        <img src="assets/images/guide-cover-boundaries.png" alt="The Boundaries Reset guide cover" loading="lazy">
                     </div>
                     <div class="guide-card-title">The Boundaries Reset</div>
-                    <div class="guide-card-desc">A 17-page guide for protecting your peace, saying the clean sentence, and staying with yourself afterward. Includes a bonus code for 3 month access to the Catharsis Cards app premium subscription.</div>
+                    <div class="guide-card-desc">A 38-page, 14-day workshop for protecting your energy without overexplaining, apologizing for your needs, or disappearing from connection. Includes a bonus code for 3 month access to the Catharsis Cards app premium subscription.</div>
                     <div class="guide-card-buy-row">
                         <a href="https://buy.stripe.com/dRm5kEgzJ9Dnfd2fRW53O02" target="_blank" rel="noopener" class="guide-card-badge guide-card-badge-active" onclick="gtag('event', 'pdf_purchase_click', {'guide_name': 'boundaries-reset-workbook', 'platform': 'ios'});">Buy for iOS &ndash; &euro;3.99</a>
                         <a href="https://buy.stripe.com/00waEYfvF2aVc0Q5di53O03" target="_blank" rel="noopener" class="guide-card-badge guide-card-badge-active" onclick="gtag('event', 'pdf_purchase_click', {'guide_name': 'boundaries-reset-workbook', 'platform': 'android'});">Buy for Android &ndash; &euro;3.99</a>
                     </div>
                 </div>
                 <div class="guide-card guide-card-active">
-                    <div class="guide-card-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                            <path d="M14 2v6h6"/>
-                        </svg>
+                    <div class="guide-card-cover">
+                        <img src="assets/images/guide-cover-burnout.png" alt="The Emotional Burnout Reset guide cover" loading="lazy">
                     </div>
-                    <div class="guide-card-title">Emotional Burnout Reset</div>
-                    <div class="guide-card-desc">An 18-page guide for noticing depletion, reducing emotional load, and coming back to yourself gently. Includes a bonus code for 3 month access to the Catharsis Cards app premium subscription.</div>
+                    <div class="guide-card-title">The Emotional Burnout Reset</div>
+                    <div class="guide-card-desc">A 38-page, 14-day workshop for recovering from emotional depletion, reducing invisible load, and rebuilding energy without forcing yourself back into performance. Includes a bonus code for 3 month access to the Catharsis Cards app premium subscription.</div>
                     <div class="guide-card-buy-row">
                         <a href="https://buy.stripe.com/fZu28s0AL16R2qgcFK53O00" target="_blank" rel="noopener" class="guide-card-badge guide-card-badge-active" onclick="gtag('event', 'pdf_purchase_click', {'guide_name': 'emotional-burnout-reset-workbook', 'platform': 'ios'});">Buy for iOS &ndash; &euro;3.99</a>
                         <a href="https://buy.stripe.com/dRmaEY6Z94j3aWMaxC53O05" target="_blank" rel="noopener" class="guide-card-badge guide-card-badge-active" onclick="gtag('event', 'pdf_purchase_click', {'guide_name': 'emotional-burnout-reset-workbook', 'platform': 'android'});">Buy for Android &ndash; &euro;3.99</a>
@@ -1351,10 +1768,8 @@
                     <a data-pin-do="embedPin" data-pin-width="medium" href="https://au.pinterest.com/pin/1097963584196994099/"></a>
                 </div>
 
-                <div class="embed-card embed-card--tiktok">
-                    <blockquote class="tiktok-embed" cite="https://www.tiktok.com/@findyourcatharsis/photo/7645529598847110403" data-video-id="7645529598847110403" style="max-width: 605px; min-width: 325px;">
-                        <section><a target="_blank" rel="noopener" href="https://www.tiktok.com/@findyourcatharsis">@findyourcatharsis</a></section>
-                    </blockquote>
+                <div class="embed-card embed-card--instagram">
+                    <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DbTWZu1jFnK/?utm_source=ig_web_copy_link&amp;igsh=MzRlODBiNWFlZA==" data-instgrm-version="14"></blockquote>
                 </div>
 
                 <div class="embed-card embed-card--x">
@@ -1369,9 +1784,9 @@
     <section class="about-section" id="about">
         <div class="about-container">
             <h2 class="about-heading">About Catharsis</h2>
-            <p class="about-text">The world can be a confusing, cruel, and irrational place — and growing up in it today looks different than it did for the generations before. Catharsis is our small contribution to a much bigger issue: a beautifully simple, seemingly non-chalant card game built to get people, young and old, caring about their own and each other's mental health.</p>
+            <p class="about-text">The world can be a confusing, cruel, and irrational place — and growing up in it today looks different than it did for the generations before. Catharsis is our small contribution to a much bigger issue: a beautifully simple, seemingly non-chalant space built to get people, young and old, caring about their own and each other's mental health.</p>
             <p class="about-text">Questions are the real answers. Thinking is really just a constant asking and answering of questions, and the questions we habitually ask ourselves shape how we feel and how we live. Kids ask endless questions about everything; most of us lose that habit somewhere along the way. Catharsis is here to bring it back.</p>
-            <p class="about-text">Catharsis | k&#601;&#712;&#952;&#593;&#720;s&#618;s — the release of strong or repressed emotion. The word goes back to Aristotle, who believed that cleansing the emotions was the purpose of a good story. We borrowed it because that's exactly what we're after: releasing what's been sitting with you, one honest card at a time.</p>
+            <p class="about-text">Catharsis | <span class="ipa">k&#601;&#712;&#952;&#593;&#720;s&#618;s</span> — the release of strong or repressed emotion. The word goes back to Aristotle, who believed that cleansing the emotions was the purpose of a good story. We borrowed it because that's exactly what we're after: releasing what's been sitting with you, one honest card at a time.</p>
         </div>
     </section>
 
@@ -1427,21 +1842,24 @@
 
         (function () {
             var THEMES = ['ivory', 'indigo', 'cream'];
+            var THEME_COLORS = { ivory: '#F7F3EA', indigo: '#241c60', cream: '#ECE0C4' };
             var root = document.documentElement;
             var themeToggle = document.getElementById('themeToggle');
+            var metaThemeColor = document.getElementById('metaThemeColor');
 
             themeToggle.addEventListener('click', function () {
                 var current = root.getAttribute('data-theme') || 'ivory';
                 var next = THEMES[(THEMES.indexOf(current) + 1) % THEMES.length];
                 root.setAttribute('data-theme', next);
                 localStorage.setItem('catharsis-theme', next);
+                if (metaThemeColor) metaThemeColor.setAttribute('content', THEME_COLORS[next]);
             });
         })();
     </script>
 
     <!-- Official embed widgets for the Catharsis and You section -->
     <script async defer src="https://assets.pinterest.com/js/pinit.js"></script>
-    <script async src="https://www.tiktok.com/embed.js"></script>
+    <script async src="https://www.instagram.com/embed.js"></script>
     <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 </body>
 </html>
