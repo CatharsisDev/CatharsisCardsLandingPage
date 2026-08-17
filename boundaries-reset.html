@@ -156,12 +156,23 @@
         }
 
         .guide-cover {
+            position: relative;
             width: 220px;
             max-width: 60%;
+            aspect-ratio: 700 / 990;
             margin: 0 auto 32px;
-            display: block;
             border-radius: 12px;
+            overflow: hidden;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+        }
+
+        .guide-cover img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
         }
 
         h1 {
@@ -261,6 +272,10 @@
         .social-link svg { width: 26px; height: 26px; color: var(--text-color); opacity: 0.7; }
         .social-link:hover svg { opacity: 1; }
 
+        .legal-links { display: flex; justify-content: center; gap: 18px; flex-wrap: wrap; font-size: 13px; padding-top: 20px; opacity: 0.7; }
+        .legal-links a { color: var(--text-color); text-decoration: none; }
+        .legal-links a:hover { text-decoration: underline; }
+
         @media (max-width: 640px) {
             .navbar { padding: 16px 20px; }
             .navbar .word-logo { width: 110px; }
@@ -294,7 +309,9 @@
     </nav>
 
     <main class="article">
-        <img src="assets/images/guide-cover-boundaries.png" alt="The Boundaries Reset guide cover" class="guide-cover">
+        <div class="guide-cover">
+            <img src="assets/images/guide-cover-boundaries.png" alt="The Boundaries Reset guide cover">
+        </div>
 
         <h1>The Boundaries Reset</h1>
         <p class="lede">A two-week workshop for protecting your energy without overexplaining, apologizing for your needs, or disappearing from connection.</p>
@@ -360,6 +377,12 @@
 
         <p class="disclaimer">This guide is for reflection, emotional education, and self-support — it isn't therapy, diagnosis, or medical advice. If things feel unmanageable, please reach out to a qualified mental health professional or local crisis support.</p>
     </main>
+
+    <div class="legal-links">
+        <a href="privacy-policy.html">Privacy Policy</a>
+        <a href="terms-of-service.html">Terms of Service</a>
+        <a href="impressum.html">Legal Notice</a>
+    </div>
 
     <div class="social-links">
         <a href="https://www.tiktok.com/@findyourcatharsis" class="social-link" target="_blank" rel="noopener" aria-label="TikTok">

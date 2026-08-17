@@ -497,6 +497,23 @@
             height: 45px;
         }
 
+        .site-footer {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 30px 20px 120px;
+            text-align: center;
+            font-size: 13px;
+            opacity: 0.65;
+        }
+        .site-footer a {
+            color: var(--text-color);
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        .site-footer a:hover {
+            text-decoration: underline;
+        }
+
         /* ---------- About section ---------- */
         .about-section {
             min-height: 100vh;
@@ -992,20 +1009,31 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            gap: 14px;
             text-decoration: none;
             color: inherit;
+            /* Must be full-width: this anchor is a flex item, so without an
+               explicit width it shrinks to fit its longest child (the title
+               text). The cover's `max-width: 60%` resolves against this
+               element, so a longer title would otherwise make that card's
+               cover render larger than the others. */
+            width: 100%;
         }
 
         .guide-card-cover {
+            position: relative;
             width: 160px;
             max-width: 60%;
             aspect-ratio: 700 / 990;
             border-radius: 10px;
             overflow: hidden;
             box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+            flex-shrink: 0;
         }
 
         .guide-card-cover img {
+            position: absolute;
+            inset: 0;
             width: 100%;
             height: 100%;
             display: block;
@@ -1803,6 +1831,12 @@
             <p class="about-text">Catharsis | <span class="ipa">k&#601;&#712;&#952;&#593;&#720;s&#618;s</span> — the release of strong or repressed emotion. The word goes back to Aristotle, who believed that cleansing the emotions was the purpose of a good story. We borrowed it because that's exactly what we're after: releasing what's been sitting with you, one honest card at a time.</p>
         </div>
     </section>
+
+    <footer class="site-footer">
+        <a href="privacy-policy.html">Privacy Policy</a>
+        <a href="terms-of-service.html">Terms of Service</a>
+        <a href="impressum.html">Legal Notice</a>
+    </footer>
 
     <div class="social-links">
          <a href="https://www.tiktok.com/@findyourcatharsis" class="social-link" target="_blank" rel="noopener" aria-label="TikTok">

@@ -1,0 +1,95 @@
+<svg viewBox="0 0 980 760" xmlns="http://www.w3.org/2000/svg" role="img" font-family="Helvetica, Arial, sans-serif">
+  <title>Catharsis Cards system architecture overview</title>
+  <desc>The website is static HTML hosted on Vercel, deployed from GitHub, with DNS managed at World4You. Buy buttons link to Stripe Payment Links across two Stripe accounts; Stripe webhooks trigger a Google Apps Script that draws codes from a Google Sheet, PDFs from Google Drive, and sends email via Gmail. Google Analytics and Search Console separately observe the website.</desc>
+  <defs>
+    <marker id="arrow3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8A8A8A"/>
+    </marker>
+  </defs>
+  <rect width="980" height="760" fill="#FFFFFF"/>
+  <text x="490" y="32" text-anchor="middle" font-size="18" font-weight="700" fill="#1B1B4D">System Architecture Overview</text>
+
+  <!-- Hosting cluster -->
+  <rect x="30" y="55" width="500" height="110" rx="12" fill="none" stroke="#D6D0BF" stroke-width="1.2" stroke-dasharray="5 3"/>
+  <text x="46" y="75" font-size="11.5" fill="#8A7F5E" font-weight="700">HOSTING &amp; DOMAIN</text>
+
+  <rect x="50" y="85" width="150" height="60" rx="8" fill="#F4F1EA" stroke="#B9AE8F" stroke-width="1.4"/>
+  <text x="125" y="112" text-anchor="middle" font-size="12.5" font-weight="700" fill="#3A3325">GitHub</text>
+  <text x="125" y="129" text-anchor="middle" font-size="10" fill="#5A5340">CatharsisDev org, push to main</text>
+
+  <rect x="230" y="85" width="150" height="60" rx="8" fill="#EAF1FB" stroke="#7CA6D9" stroke-width="1.4"/>
+  <text x="305" y="112" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1B3A5C">Vercel</text>
+  <text x="305" y="129" text-anchor="middle" font-size="10" fill="#3A3A3A">Auto-deploys on push, no build step</text>
+
+  <rect x="410" y="85" width="150" height="60" rx="8" fill="#F4F1EA" stroke="#B9AE8F" stroke-width="1.4"/>
+  <text x="485" y="112" text-anchor="middle" font-size="12.5" font-weight="700" fill="#3A3325">World4You</text>
+  <text x="485" y="129" text-anchor="middle" font-size="10" fill="#5A5340">Domain registrar + DNS</text>
+
+  <line x1="200" y1="115" x2="230" y2="115" stroke="#8A8A8A" stroke-width="1.4" marker-end="url(#arrow3)"/>
+  <line x1="410" y1="115" x2="380" y2="115" stroke="#8A8A8A" stroke-width="1.4" marker-end="url(#arrow3)"/>
+
+  <!-- Website hub -->
+  <line x1="305" y1="165" x2="305" y2="205" stroke="#8A8A8A" stroke-width="1.6" marker-end="url(#arrow3)"/>
+  <rect x="130" y="207" width="350" height="60" rx="10" fill="#EAF1FB" stroke="#7CA6D9" stroke-width="1.8"/>
+  <text x="305" y="234" text-anchor="middle" font-size="14" font-weight="700" fill="#1B3A5C">Website — catharsis.cards</text>
+  <text x="305" y="252" text-anchor="middle" font-size="10.5" fill="#3A3A3A">Static HTML/CSS/JS, 4 pages</text>
+
+  <!-- Down to payments cluster -->
+  <line x1="230" y1="267" x2="180" y2="300" stroke="#8A8A8A" stroke-width="1.4" marker-end="url(#arrow3)"/>
+  <text x="140" y="288" font-size="10" fill="#7A7A7A">buy buttons</text>
+
+  <rect x="30" y="300" width="500" height="270" rx="12" fill="none" stroke="#F0D9B8" stroke-width="1.2" stroke-dasharray="5 3"/>
+  <text x="46" y="320" font-size="11.5" fill="#B8823A" font-weight="700">PAYMENTS &amp; FULFILLMENT</text>
+
+  <rect x="50" y="332" width="220" height="55" rx="8" fill="#FDF0E3" stroke="#E0A458" stroke-width="1.4"/>
+  <text x="160" y="355" text-anchor="middle" font-size="12" font-weight="700" fill="#7A4A12">Stripe — sandbox account</text>
+  <text x="160" y="372" text-anchor="middle" font-size="9.5" fill="#5A4020">Test Products / Prices / Links</text>
+
+  <rect x="290" y="332" width="220" height="55" rx="8" fill="#FDF0E3" stroke="#E0A458" stroke-width="1.4"/>
+  <text x="400" y="355" text-anchor="middle" font-size="12" font-weight="700" fill="#7A4A12">Stripe — live account</text>
+  <text x="400" y="372" text-anchor="middle" font-size="9.5" fill="#5A4020">Real Products / Prices / Links</text>
+
+  <line x1="160" y1="387" x2="280" y2="425" stroke="#8A8A8A" stroke-width="1.4" marker-end="url(#arrow3)"/>
+  <line x1="400" y1="387" x2="290" y2="425" stroke="#8A8A8A" stroke-width="1.4" marker-end="url(#arrow3)"/>
+  <text x="330" y="410" text-anchor="middle" font-size="10" fill="#7A7A7A">webhook (checkout.session.completed)</text>
+
+  <rect x="90" y="427" width="380" height="55" rx="8" fill="#EAF7EE" stroke="#6FBE8C" stroke-width="1.4"/>
+  <text x="280" y="450" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1F5C36">Google Apps Script — fulfillment</text>
+  <text x="280" y="467" text-anchor="middle" font-size="9.5" fill="#2C5A3E">CatharsisFulfillment.gs, deployed as a web app</text>
+
+  <line x1="180" y1="482" x2="130" y2="512" stroke="#8A8A8A" stroke-width="1.3" marker-end="url(#arrow3)"/>
+  <line x1="280" y1="482" x2="280" y2="512" stroke="#8A8A8A" stroke-width="1.3" marker-end="url(#arrow3)"/>
+  <line x1="380" y1="482" x2="430" y2="512" stroke="#8A8A8A" stroke-width="1.3" marker-end="url(#arrow3)"/>
+
+  <rect x="50" y="514" width="160" height="50" rx="8" fill="#EAF7EE" stroke="#6FBE8C" stroke-width="1.4"/>
+  <text x="130" y="535" text-anchor="middle" font-size="11" font-weight="700" fill="#1F5C36">Google Sheet</text>
+  <text x="130" y="550" text-anchor="middle" font-size="9.5" fill="#2C5A3E">iOS / Android codes</text>
+
+  <rect x="200" y="514" width="160" height="50" rx="8" fill="#EAF7EE" stroke="#6FBE8C" stroke-width="1.4"/>
+  <text x="280" y="535" text-anchor="middle" font-size="11" font-weight="700" fill="#1F5C36">Google Drive</text>
+  <text x="280" y="550" text-anchor="middle" font-size="9.5" fill="#2C5A3E">3 guide PDFs</text>
+
+  <rect x="350" y="514" width="160" height="50" rx="8" fill="#EAF7EE" stroke="#6FBE8C" stroke-width="1.4"/>
+  <text x="430" y="535" text-anchor="middle" font-size="11" font-weight="700" fill="#1F5C36">Gmail</text>
+  <text x="430" y="550" text-anchor="middle" font-size="9.5" fill="#2C5A3E">Sends the fulfillment email</text>
+
+  <!-- Analytics cluster -->
+  <line x1="480" y1="267" x2="720" y2="330" stroke="#8A8A8A" stroke-width="1.4" marker-end="url(#arrow3)"/>
+  <text x="700" y="300" font-size="10" fill="#7A7A7A">pageviews + click events</text>
+
+  <rect x="600" y="300" width="330" height="115" rx="12" fill="none" stroke="#C9DCC9" stroke-width="1.2" stroke-dasharray="5 3"/>
+  <text x="616" y="320" font-size="11.5" fill="#4E8A5C" font-weight="700">ANALYTICS &amp; SEARCH</text>
+
+  <rect x="620" y="332" width="290" height="35" rx="8" fill="#EAF7EE" stroke="#6FBE8C" stroke-width="1.3"/>
+  <text x="765" y="354" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1F5C36">Google Analytics 4</text>
+
+  <rect x="620" y="375" width="290" height="35" rx="8" fill="#EAF7EE" stroke="#6FBE8C" stroke-width="1.3"/>
+  <text x="765" y="397" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1F5C36">Google Search Console</text>
+
+  <line x1="480" y1="230" x2="920" y2="230" stroke="#C9C2AE" stroke-width="1" stroke-dasharray="3 3"/>
+  <line x1="920" y1="230" x2="920" y2="375" stroke="#C9C2AE" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#arrow3)"/>
+  <text x="900" y="220" text-anchor="end" font-size="10" fill="#7A7A7A">crawls sitemap.xml</text>
+
+  <text x="490" y="605" text-anchor="middle" font-size="10.5" fill="#8A8A8A">Two independent Stripe accounts (sandbox and live) share one Apps Script project, told apart by the webhook's "livemode" flag.</text>
+  <text x="490" y="622" text-anchor="middle" font-size="10.5" fill="#8A8A8A">See section 3 of the handover document for the full account/access list.</text>
+</svg>

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-1KJT8EGY9Q"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-1KJT8EGY9Q');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Privacy Policy for Catharsis Cards — how we collect, use, and protect your data on catharsis.cards." />
+    <meta name="robots" content="index,follow" />
+    <link rel="canonical" href="https://catharsis.cards/privacy-policy.html" />
+    <meta name="theme-color" content="#F7F3EA" id="metaThemeColor" />
+    <title>Privacy Policy | Catharsis Cards</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+
+    <style>
+        @font-face {
+            font-family: 'Raleway';
+            src: url('assets/fonts/Raleway-Regular.ttf') format('truetype');
+            font-weight: 700;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'Raleway';
+            src: url('assets/fonts/Raleway-Bold.ttf') format('truetype');
+            font-weight: 800;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'Runtime';
+            src: url('assets/fonts/Runtime.otf') format('opentype');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+
+        :root {
+            --body-bg: #F7F3EA;
+            --text-color: #1B1B4D;
+            --nav-bg: rgba(250, 247, 240, 0.8);
+            --nav-border: rgba(0, 0, 0, 0.08);
+            --badge-bg: linear-gradient(90deg, #AFC0EA 0%, #F0C48A 100%);
+            --badge-text: #1B1B4D;
+            --card-bg: rgba(255, 255, 255, 0.5);
+            --logo-filter: none;
+            --highlight-bg: rgba(224, 164, 88, 0.15);
+            --highlight-border: rgba(224, 164, 88, 0.4);
+        }
+        [data-theme="cream"] {
+            --body-bg: #ECE0C4;
+            --text-color: #2C2C2C;
+            --nav-bg: rgba(247, 240, 221, 0.8);
+            --nav-border: rgba(0, 0, 0, 0.08);
+            --badge-bg: #1F4D2E;
+            --badge-text: #F3EEE1;
+            --card-bg: rgba(255, 255, 255, 0.55);
+            --logo-filter: none;
+            --highlight-bg: rgba(31, 77, 46, 0.12);
+            --highlight-border: rgba(31, 77, 46, 0.3);
+        }
+        [data-theme="indigo"] {
+            --body-bg: #241c60;
+            --text-color: #F3EEE1;
+            --nav-bg: rgba(20, 15, 55, 0.5);
+            --nav-border: rgba(255, 255, 255, 0.08);
+            --badge-bg: #8B6FE0;
+            --badge-text: #F8F4FF;
+            --card-bg: rgba(255, 255, 255, 0.08);
+            --logo-filter: brightness(0) invert(1);
+            --highlight-bg: rgba(139, 111, 224, 0.15);
+            --highlight-border: rgba(139, 111, 224, 0.4);
+        }
+
+        body {
+            font-family: 'Runtime', 'Raleway', sans-serif;
+            background-color: var(--body-bg);
+            color: var(--text-color);
+            transition: background-color 0.3s ease, color 0.3s ease;
+            line-height: 1.65;
+        }
+
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 40px;
+            background: var(--nav-bg);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--nav-border);
+        }
+        .navbar .word-logo { width: 150px; height: auto; filter: var(--logo-filter); }
+        .nav-right { display: flex; align-items: center; gap: 20px; }
+        .back-link { font-size: 15px; font-weight: 600; color: var(--text-color); text-decoration: none; opacity: 0.75; }
+        .back-link:hover { opacity: 1; }
+        .theme-toggle {
+            display: flex; align-items: center; justify-content: center;
+            width: 38px; height: 38px; border-radius: 50%;
+            border: 1px solid var(--nav-border); background: transparent;
+            cursor: pointer; padding: 0;
+        }
+        .theme-toggle img { width: 18px; height: 18px; filter: var(--logo-filter); }
+
+        .article { max-width: 760px; margin: 0 auto; padding: 60px 24px 80px; }
+
+        h1 { font-size: 38px; font-weight: 300; line-height: 1.2; margin-bottom: 10px; }
+        .updated { font-size: 13px; opacity: 0.6; margin-bottom: 36px; }
+
+        .placeholder-note {
+            background: var(--highlight-bg);
+            border: 1px solid var(--highlight-border);
+            border-radius: 12px;
+            padding: 16px 20px;
+            font-size: 13.5px;
+            margin-bottom: 40px;
+        }
+
+        section.block { margin-bottom: 34px; }
+        section.block h2 { font-size: 20px; font-weight: 700; margin-bottom: 12px; }
+        section.block h3 { font-size: 15.5px; font-weight: 700; margin: 16px 0 6px; }
+        section.block p, section.block li { font-size: 15px; opacity: 0.9; margin-bottom: 10px; }
+        section.block ul, section.block ol { padding-left: 22px; margin-bottom: 10px; }
+        .fill { background: var(--highlight-bg); border-bottom: 1.5px dashed var(--highlight-border); padding: 0 4px; border-radius: 3px; }
+
+        .social-links { display: flex; justify-content: center; gap: 20px; padding: 10px 0 24px; }
+        .social-link svg { width: 26px; height: 26px; color: var(--text-color); opacity: 0.7; }
+        .social-link:hover svg { opacity: 1; }
+
+        .legal-links { display: flex; justify-content: center; gap: 18px; flex-wrap: wrap; font-size: 13px; padding-bottom: 60px; opacity: 0.7; }
+        .legal-links a { color: var(--text-color); text-decoration: none; }
+        .legal-links a:hover { text-decoration: underline; }
+
+        @media (max-width: 640px) {
+            .navbar { padding: 16px 20px; }
+            .navbar .word-logo { width: 110px; }
+            h1 { font-size: 28px; }
+            .article { padding: 40px 18px 60px; }
+        }
+    </style>
+</head>
+<body>
+    <script>
+        (function () {
+            var THEMES = ['ivory', 'indigo', 'cream'];
+            var THEME_COLORS = { ivory: '#F7F3EA', indigo: '#241c60', cream: '#ECE0C4' };
+            var stored = localStorage.getItem('catharsis-theme');
+            var initial = THEMES.indexOf(stored) !== -1 ? stored : 'ivory';
+            document.documentElement.setAttribute('data-theme', initial);
+            var metaThemeColor = document.getElementById('metaThemeColor');
+            if (metaThemeColor) metaThemeColor.setAttribute('content', THEME_COLORS[initial]);
+        })();
+    </script>
+
+    <nav class="navbar">
+        <img src="assets/images/catharsis_word_only.png" alt="Catharsis Word Logo" class="word-logo">
+        <div class="nav-right">
+            <a href="/" class="back-link">&larr; Back to Catharsis Cards</a>
+            <button class="theme-toggle" id="themeToggle" aria-label="Switch color theme" title="Switch color theme">
+                <img src="assets/images/change_theme_icon.png" alt="" class="theme-toggle-icon">
+            </button>
+        </div>
+    </nav>
+
+    <main class="article">
+        <h1>Privacy Policy</h1>
+        <p class="updated">Last updated: August 12, 2026</p>
+
+        <p class="placeholder-note"><strong>Before publishing:</strong> this draft is now complete, but should be reviewed by a qualified lawyer before it goes live — it is a starting point, not legal advice.</p>
+
+        <section class="block">
+            <p>This Privacy Policy explains how WeMadeThis OÜ ("we," "us," "our") collects, uses, and protects information when you visit catharsis.cards or purchase one of our digital guides. It does not cover the separate Catharsis Cards mobile app, which has its own in-app privacy disclosures.</p>
+        </section>
+
+        <section class="block">
+            <h2>1. Who we are</h2>
+            <p>WeMadeThis OÜ<br>
+            Järvevana tee 9<br>
+            Kesklinna linnaosa, Tallinn 11314<br>
+            Harju maakond, Estonia<br>
+            Contact: <a href="mailto:findyourcatharsis@gmail.com">findyourcatharsis@gmail.com</a></p>
+        </section>
+
+        <section class="block">
+            <h2>2. What information we collect</h2>
+            <h3>When you browse the site</h3>
+            <p>We use Google Analytics 4 to understand how visitors use the site — pages viewed, approximate location (derived from IP address, not stored precisely), device and browser type, and referral source. This relies on cookies and similar technologies. We also track when a guide's "Buy" button is clicked (which guide, which platform), so we can see which products are performing, without this being tied to your payment details.</p>
+            <p>Some sections of the site display embedded posts from Instagram, X (Twitter), and Pinterest. These platforms may set their own cookies or collect data when their embedded content loads, governed by their own privacy policies, not this one.</p>
+            <h3>When you purchase a guide</h3>
+            <p>Checkout is handled entirely by Stripe. We never see or store your payment card details. Stripe collects your email address and payment information to process the transaction — see <a href="https://stripe.com/privacy" target="_blank" rel="noopener">Stripe's Privacy Policy</a>.</p>
+            <p>After a successful purchase, your email address and order details (which guide, which platform, purchase date) are stored in our internal order-fulfillment system so that we can email you the PDF guide and your bonus access code, and so we can investigate and resolve any delivery issues you report to us.</p>
+        </section>
+
+        <section class="block">
+            <h2>3. Why we process this data</h2>
+            <ul>
+                <li><strong>To fulfil your order</strong> — necessary to perform our contract with you (deliver the guide and bonus code you paid for).</li>
+                <li><strong>To operate and improve the site</strong> — our legitimate interest in understanding usage and fixing problems.</li>
+                <li><strong>Analytics cookies</strong> — where required by law, based on your consent.</li>
+            </ul>
+        </section>
+
+        <section class="block">
+            <h2>4. Who we share data with</h2>
+            <p>We use the following service providers, each of which processes data on our behalf under their own security and privacy terms:</p>
+            <ul>
+                <li><strong>Stripe</strong> — payment processing</li>
+                <li><strong>Google</strong> (Analytics, Apps Script, Sheets, Drive, Gmail) — site analytics and automated order fulfillment/email delivery</li>
+                <li><strong>Vercel</strong> — website hosting</li>
+                <li><strong>Instagram, X, Pinterest</strong> — embedded content on the site, only when those sections are viewed</li>
+            </ul>
+            <p>We do not sell your personal information to third parties.</p>
+        </section>
+
+        <section class="block">
+            <h2>5. International data transfers</h2>
+            <p>Some of the providers above (including Stripe and Google) may process data outside the European Economic Area, including in the United States, under appropriate safeguards such as Standard Contractual Clauses.</p>
+        </section>
+
+        <section class="block">
+            <h2>6. How long we keep your data</h2>
+            <p>Order records (email address, purchase details) are kept for as long as needed to fulfil your order, respond to support requests, and meet our legal and tax record-keeping obligations — under the Estonian Accounting Act, accounting source documents must be kept for 7 years from the end of the financial year they relate to. Analytics data is retained according to Google Analytics' default retention settings.</p>
+        </section>
+
+        <section class="block">
+            <h2>7. Your rights</h2>
+            <p>If you are located in the European Economic Area or another jurisdiction with similar protections, you generally have the right to: access the personal data we hold about you; request correction or deletion of it; restrict or object to certain processing; request a copy of your data in a portable format; and lodge a complaint with your local data protection authority.</p>
+            <p>To exercise any of these rights, contact us at <a href="mailto:findyourcatharsis@gmail.com">findyourcatharsis@gmail.com</a>.</p>
+        </section>
+
+        <section class="block">
+            <h2>8. Cookies</h2>
+            <p>The site uses essential cookies (e.g. to remember your color theme preference) and analytics cookies (Google Analytics 4). Embedded social posts may set additional third-party cookies when displayed.</p>
+        </section>
+
+        <section class="block">
+            <h2>9. Children's privacy</h2>
+            <p>This site is not directed at children under 16, and we do not knowingly collect personal data from children.</p>
+        </section>
+
+        <section class="block">
+            <h2>10. Changes to this policy</h2>
+            <p>We may update this policy from time to time. The "Last updated" date at the top reflects the most recent revision.</p>
+        </section>
+
+        <section class="block">
+            <h2>11. Contact us</h2>
+            <p>Questions about this policy or your data can be sent to <a href="mailto:findyourcatharsis@gmail.com">findyourcatharsis@gmail.com</a>.</p>
+        </section>
+    </main>
+
+    <div class="legal-links">
+        <a href="privacy-policy.html">Privacy Policy</a>
+        <a href="terms-of-service.html">Terms of Service</a>
+        <a href="impressum.html">Legal Notice</a>
+    </div>
+
+    <div class="social-links">
+        <a href="https://www.tiktok.com/@findyourcatharsis" class="social-link" target="_blank" rel="noopener" aria-label="TikTok">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.74h-3.4v13.67a2.9 2.9 0 1 1-2-2.75V9.41a6.34 6.34 0 1 0 5.44 6.27v-6.9a8.2 8.2 0 0 0 4.77 1.52V6.69h-1.04z"/></svg>
+        </a>
+        <a href="https://www.instagram.com/catharsisposts/" class="social-link" target="_blank" rel="noopener" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7.8,2H16.2C19.4,2 22,4.6 22,7.8V16.2A5.8,5.8 0 0,1 16.2,22H7.8C4.6,22 2,19.4 2,16.2V7.8A5.8,5.8 0 0,1 7.8,2M7.6,4A3.6,3.6 0 0,0 4,7.6V16.4C4,18.39 5.61,20 7.6,20H16.4A3.6,3.6 0 0,0 20,16.4V7.6C20,5.61 18.39,4 16.4,4H7.6M17.25,5.5A1.25,1.25 0 0,1 18.5,6.75A1.25,1.25 0 0,1 17.25,8A1.25,1.25 0 0,1 16,6.75A1.25,1.25 0 0,1 17.25,5.5M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z"/></svg>
+        </a>
+        <a href="https://x.com/catharsisxyz" class="social-link" target="_blank" rel="noopener" aria-label="X (Twitter)">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
+        <a href="https://au.pinterest.com/findyourcatharsis/" class="social-link" target="_blank" rel="noopener" aria-label="Pinterest">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.017 0C5.396 0 0 5.396 0 12.017c0 5.109 3.164 9.505 7.627 11.303-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.171-2.911 1.023 0 1.517.769 1.517 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.098.12.112.225.083.345l-.333 1.36c-.053.222-.174.269-.402.164-1.499-.699-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.631-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146 1.123.345 2.312.53 3.55.53 6.624 0 11.99-5.396 11.99-12.017C24.017 5.396 18.617 0 12.017 0z"/></svg>
+        </a>
+        <a href="https://www.youtube.com/@catharsisxyz" class="social-link" target="_blank" rel="noopener" aria-label="YouTube">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10,15L15.19,12L10,9V15M21.56,7.17C21.69,7.64 21.78,8.27 21.84,9.07C21.91,9.87 21.94,10.56 21.94,11.16L22,12C22,14.19 21.84,15.8 21.56,16.83C21.31,17.73 20.73,18.31 19.83,18.56C19.36,18.69 18.5,18.78 17.18,18.84C15.88,18.91 14.69,18.94 13.59,18.94L12,19C7.81,19 5.2,18.84 4.17,18.56C3.27,18.31 2.69,17.73 2.44,16.83C2.31,16.36 2.22,15.73 2.16,14.93C2.09,14.13 2.06,13.44 2.06,12.84L2,12C2,9.81 2.16,8.2 2.44,7.17C2.69,6.27 3.27,5.69 4.17,5.44C4.64,5.31 5.5,5.22 6.82,5.16C8.12,5.09 9.31,5.06 10.41,5.06L12,5C16.19,5 18.8,5.16 19.83,5.44C20.73,5.69 21.31,6.27 21.56,7.17Z"/></svg>
+        </a>
+    </div>
+
+    <script>
+        (function () {
+            var THEMES = ['ivory', 'indigo', 'cream'];
+            var THEME_COLORS = { ivory: '#F7F3EA', indigo: '#241c60', cream: '#ECE0C4' };
+            var root = document.documentElement;
+            var themeToggle = document.getElementById('themeToggle');
+            var metaThemeColor = document.getElementById('metaThemeColor');
+            themeToggle.addEventListener('click', function () {
+                var current = root.getAttribute('data-theme') || 'ivory';
+                var next = THEMES[(THEMES.indexOf(current) + 1) % THEMES.length];
+                root.setAttribute('data-theme', next);
+                localStorage.setItem('catharsis-theme', next);
+                if (metaThemeColor) metaThemeColor.setAttribute('content', THEME_COLORS[next]);
+            });
+        })();
+    </script>
+</body>
+</html>
