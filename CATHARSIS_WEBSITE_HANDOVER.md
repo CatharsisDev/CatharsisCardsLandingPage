@@ -29,7 +29,7 @@ The site has two parts that matter for a handover:
 | Fonts | Self-hosted (`assets/fonts/`) — Raleway (Regular/Bold, `.ttf`) and Runtime (`.otf`), loaded via `@font-face`. |
 | Styling | Hand-written CSS in a single `<style>` block per page. Uses CSS custom properties (`--body-bg`, `--text-color`, etc.) for a 3-way light/dark-style theme system. |
 | Hosting | **Vercel**, connected directly to the GitHub repository. Every push to `main` triggers an automatic rebuild/redeploy — since there's no build step, this is effectively "publish the files as-is." |
-| Domain / DNS | Registered through **World4You** (an Austrian domain registrar — note this is just the vendor, and is unrelated to the operating company's Estonian jurisdiction). DNS records point at Vercel. |
+| Domain / DNS | **Registered** through World4You (an Austrian registrar — just the vendor, unrelated to the company's Estonian jurisdiction). **DNS is NOT managed there:** nameservers are delegated to `ns1.vercel-dns.com` / `ns2.vercel-dns.com`, so **Vercel is authoritative** and all DNS records are edited in the Vercel dashboard. World4You only handles registration and renewal. |
 | Version control | Git, hosted on GitHub, repo under the `CatharsisDev` organization. |
 | Analytics | Google Analytics 4 (`gtag.js`), plus custom `pdf_purchase_click` events fired from the guide "Buy" buttons. |
 | Search | Google Search Console, `sitemap.xml` + `robots.txt` at the site root. |
@@ -99,10 +99,21 @@ Each of the three guide pages is a full standalone HTML document (own `<head>`, 
 ## 5. Domain & DNS
 
 - Domain: `catharsis.cards`
-- Registrar: **World4You**
-- DNS is configured (via the World4You account) to point the domain at Vercel, so that Vercel can serve and SSL-terminate requests to the custom domain.
+- Registrar: **World4You** — registration and renewal only
+- **DNS: managed in Vercel.** The nameservers are delegated to `ns1.vercel-dns.com` / `ns2.vercel-dns.com`, making Vercel authoritative for every record. This trips people up: because World4You is the registrar, its DNS panel looks like the place to edit records, but anything set there is ignored. All records — A/CNAME, TXT, MX, DKIM — must be added in the Vercel dashboard.
 
-Whoever takes over the site needs access to **both** the World4You account (to manage/renew the domain and touch DNS if the host ever changes) and the Vercel project (to manage the deploy target, custom domain binding, and SSL). These are two separate logins — see the Access Inventory in §11.
+Whoever takes over needs access to **both** accounts: World4You to renew the domain and change nameserver delegation, and Vercel for hosting, SSL, and all DNS records. See the Access Inventory in §11.
+
+**Email authentication (already configured, in Vercel's DNS):**
+
+| Record | Purpose |
+|---|---|
+| `brevo-code:…` TXT | Proves domain ownership to Brevo |
+| `v=spf1 include:_spf.firebasemail.com include:spf.brevo.com ~all` | Authorises Brevo and Firebase to send as this domain. **Only one SPF record may exist** — add new senders as another `include:` inside this record, never as a second TXT |
+| `brevo1._domainkey` / `brevo2._domainkey` CNAMEs | Brevo DKIM signing keys |
+| `_dmarc` TXT (`p=none`) | DMARC in monitoring mode, reports to Brevo |
+
+Note this authentication only takes effect when mail is actually sent **from** a `@catharsis.cards` sender. Brevo defaults new templates to a shared `brevosend.com` address, which bypasses all of the above and lands in spam — if deliverability suddenly degrades, check the sender address on the template before touching DNS.
 
 ---
 
@@ -150,7 +161,7 @@ All 7 pages support 3 color themes — **ivory** (default), **indigo**, **cream*
 | Google Search Console | Verifies + monitors indexing | Verified against the domain; `sitemap.xml` submitted there |
 | Instagram / X (Twitter) / Pinterest embeds | Render the actual live posts in the "Catharsis and You" section | Each is the platform's official `blockquote` + embed script (`embed.js` / `widgets.js` / `pinit.js`) — no API keys involved, these are public embeds |
 | Stripe Payment Links | Handle checkout for the 3 guides (2 platforms × 3 guides = 6 links) | Links are plain URLs pasted directly into the buy buttons — no Stripe JS SDK on the site itself |
-| beehiiv | Newsletter signup form + subscriber list | **Two** scripts per page: the form loader inside `<section class="newsletter">`, and `attribution.js` just before `</body>` which forwards UTM/referrer data so signups are tagged with their traffic source. Both must be present on any new page carrying the form. Form appearance is edited in beehiiv (Grow → Subscribe Forms), not in this codebase |
+| Brevo | Newsletter subscriber list + email delivery; also used separately for existing marketing emails | The signup form is **native HTML in this codebase** (not an embed) — it POSTs straight to a Brevo `sibforms.com` endpoint. Field names `EMAIL` / `OPT_IN` and the hidden `email_address_check` honeypot are Brevo's and must not be renamed or removed. Subscribers land in **list #3**, with double opt-in enabled |
 
 ---
 
@@ -238,7 +249,8 @@ Open the Google Sheet directly — the `Used` column (TRUE/FALSE) on the `iOS`/`
 - **Legal pages are content-complete.** All three (Privacy Policy, Terms of Service, Legal Notice) are filled in with no placeholders remaining, and are linked from the footer of every page. They remain **excluded from `sitemap.xml`** — that was originally to avoid indexing placeholder text, but is now simply a choice: legal pages are low-value search targets and many sites leave them out. Adding the 3 URLs is a one-line change if you'd rather they be indexed.
 - **Contact address is a Gmail account** (`findyourcatharsis@gmail.com`), used across all three legal pages. Legally sufficient, but a domain-based address (e.g. `hello@catharsis.cards`) would present better to buyers reading the terms pre-purchase. Straightforward to swap — it appears in 8 places across the three files.
 - **VAT treatment needs confirming against actual registration status.** The Terms state prices are VAT-inclusive, which is correct for EU B2C regardless. But whether VAT is actually being *collected* depends on (a) Estonian domestic VAT registration status and (b) the EU-wide €10,000/year threshold for cross-border B2C digital sales — above that threshold, VAT is due at each customer's national rate and must be reported via the EU One Stop Shop. Also worth verifying that Stripe Tax, if enabled on the Payment Links, is configured for **inclusive** pricing so buyers are charged exactly €3.99 and the Terms remain accurate.
-- **Newsletter form styling lives in beehiiv, not in this codebase.** The signup section above the footer on all 7 pages contains only a heading, subtitle, and privacy link that we control; the form itself is injected at runtime by beehiiv's loader script (`subscribe-forms.beehiiv.com/v3/loader.js`, form ID in the `data-beehiiv-form` attribute). Changing how the input and button look means editing the form in **beehiiv → Grow → Subscribe Forms**, not editing CSS here — the injected markup isn't reachable from the page stylesheet. Because it's a third-party script, it also won't follow the site's ivory/indigo/cream theme switching, and **aggressive ad/tracker blockers may prevent it rendering at all**, leaving the heading with an empty space beneath it. Worth checking with uBlock Origin enabled before assuming it's fine for everyone.
+- **Newsletter form is native markup, and duplicated across 7 pages.** The signup section above the footer on every page is ordinary HTML posting to Brevo, styled with the site's own CSS variables so it follows the theme switcher. That's deliberate — an earlier beehiiv embed was replaced precisely because a cross-origin iframe couldn't be themed, couldn't be reached by the stylesheet, and was blocked outright on `file://`. The trade-off is duplication: the form markup, its CSS, and the submit handler are copy-pasted into all 7 files, so **any change to the form must be made 7 times**. If a build step is ever introduced, this is the first thing worth extracting into a partial.
+- **The newsletter submit handler is optimistic.** It posts via `fetch` with `mode: 'no-cors'`, which means the browser cannot read Brevo's response — so the "check your inbox" confirmation is shown whether or not the submission actually succeeded. This is an accepted trade for keeping subscribers on the page, and is safe in practice because the real confirmation is the double opt-in email; a failed submission simply means no email arrives. If you ever need true success/failure feedback, it would require a small proxy endpoint on your own domain rather than posting cross-origin.
 - **No automated tests, linting, or build pipeline** — appropriate for a site this size, but worth knowing going in: nothing will catch a broken tag or typo before it's live except manual review.
 - **Single Apps Script project serves both sandbox and live Stripe webhooks** — functional and currently working, but it means a code bug affects both environments simultaneously (there's no environment isolation at the fulfillment layer, only at the Stripe-account/key level).
 - **No documented refund-to-code-clawback process** — if a Stripe refund is issued, nothing in the fulfillment script invalidates the code that was already emailed to that buyer. Worth a manual process note, or future automation, if refund volume ever becomes non-trivial.
